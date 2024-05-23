@@ -8,8 +8,8 @@ const showBooksInaLibrary = `
 `;
 const getBookAuthors = `
     SELECT authorName AS Author_Name
-    FROM bookAuthorRelationship AS BLR
-    WHERE BLR.ISBNBook = $1;
+    FROM bookAuthorRelationship AS BAR, authors AS A
+    WHERE BAR.ISBNBook = $1 AND A.SSN = BAR.ssnAuthor;
 `;
 const getBookDataByISBN = `
     SELECT bookName as Book_Name, bookGenre as Book_Genre
