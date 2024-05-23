@@ -3,25 +3,25 @@
 --QUERIES TO DROP ALL TABLE IF NEEDED
 --Dropping all constraints first
 ALTER TABLE Librarians
-DROP CONSTRAINT fk_LibrariansPlace;
+DROP CONSTRAINT IF EXISTS fk_LibrariansPlace;
 
 ALTER TABLE Libraries
-DROP CONSTRAINT fk_LibraryOwner;
+DROP CONSTRAINT IF EXISTS fk_LibraryOwner;
 
 ALTER TABLE LibraryBooks
-DROP CONSTRAINT fk_bookTOgenre;
+DROP CONSTRAINT IF EXISTS fk_bookTOgenre;
 
 ALTER TABLE bookLibraryRelationship
-DROP CONSTRAINT fk_LibraryHasBook;
+DROP CONSTRAINT IF EXISTS fk_LibraryHasBook;
 
 ALTER TABLE bookLibraryRelationship
-DROP CONSTRAINT fk_bookData;
+DROP CONSTRAINT IF EXISTS fk_bookData;
 
 ALTER TABLE bookAuthorRelationship
-DROP CONSTRAINT fk_bookAuthor;
+DROP CONSTRAINT IF EXISTS fk_bookAuthor;
 
 ALTER TABLE bookAuthorRelationship
-DROP CONSTRAINT fk_bookData;
+DROP CONSTRAINT IF EXISTS fk_bookData;
 
 --Now Drop ALL TABLES
 
@@ -72,14 +72,14 @@ CREATE TABLE IF NOT EXISTS Genre(
 CREATE TABLE IF NOT EXISTS bookAuthorRelationship(
 	ssnAuthor char(10) not null,
 	ISBNBook char(10) not null,
-	PRIMARY KEY (ssnAuthor, ISBNBook),
-	numberOfCopies int default 0
+	PRIMARY KEY (ssnAuthor, ISBNBook)
 );
 
 CREATE TABLE IF NOT EXISTS bookLibraryRelationship(
 	ISBNBook char(10) not null,
 	libraryID int not null,
-	PRIMARY KEY (ISBNBook, libraryID)
+	PRIMARY KEY (ISBNBook, libraryID),
+	numberOfCopies int default 0
 );
 
 
