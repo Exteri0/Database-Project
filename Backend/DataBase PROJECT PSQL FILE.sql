@@ -55,7 +55,6 @@ CREATE TABLE IF NOT EXISTS LibraryBooks(
 	ISBN char(10) not null,
 	bookName varchar(30) not null,
 	bookGenre varchar(20) not null,
-	numberOfCopies int default 0,
 	PRIMARY KEY (ISBN)
 );
 
@@ -73,7 +72,8 @@ CREATE TABLE IF NOT EXISTS Genre(
 CREATE TABLE IF NOT EXISTS bookAuthorRelationship(
 	ssnAuthor char(10) not null,
 	ISBNBook char(10) not null,
-	PRIMARY KEY (ssnAuthor, ISBNBook)
+	PRIMARY KEY (ssnAuthor, ISBNBook),
+	numberOfCopies int default 0
 );
 
 CREATE TABLE IF NOT EXISTS bookLibraryRelationship(
@@ -122,4 +122,19 @@ ON UPDATE CASCADE;
 -- "-----------------"
 
 
+-- Seeding example data to work on
 
+-- Libraries
+INSERT INTO libraries VALUES (1, 'Alex Library', 20, 1);
+INSERT INTO libraries VALUES (2, 'Cairo Library', 18, 6);
+
+-- Creating some librarians for them
+INSERT INTO librarians VALUES (1, 'Ahmad',1);
+INSERT INTO librarians VALUES (2, 'Omar',1);
+INSERT INTO librarians VALUES (3, 'Peter',2);
+INSERT INTO librarians VALUES (4, 'Myron',2);
+INSERT INTO librarians VALUES (5, 'Mike',1);
+INSERT INTO librarians VALUES (6, 'Amon',1);
+INSERT INTO librarians VALUES (7, 'Gus',2);
+
+--Now we create some books
