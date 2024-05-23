@@ -1,6 +1,5 @@
 const pool = require('../../database');
 const queries = require('./queries');
-const url = require('url');
 
 const getLibraries = (req, res) => {
     pool.query(queries.getLibraries, (error, results) => {
@@ -22,8 +21,8 @@ const getNoBooksFromLibrary = (req, res) => {
     pool.query(queries.getNoBooksFromLibrary, [libraryID], (error, results) => {
         if (error) throw error;
         res.status(200).json(results.rows);
-    } )
-}
+    })
+};
 
 const getBookDataByISBN = (req, res) => {
     const ISBN_Entry = req.params.ISBN;
@@ -31,7 +30,7 @@ const getBookDataByISBN = (req, res) => {
         if (error) throw error;
         res.status(200).json(results.rows);
     })
-}
+};
 
 const getBookAuthors = (req, res) => {
     const ISBN_Entry = req.params.ISBN;
@@ -39,15 +38,13 @@ const getBookAuthors = (req, res) => {
         if (error) throw error;
         res.status(200).json(results.rows);
     })
-}
-
-
+};
 
 module.exports = {
     getLibraries,
     getLibrariesById,
     getNoBooksFromLibrary,
     getBookDataByISBN,
-    getBookAuthors,    
-    
+    getBookAuthors,
+    showBooksInaLibrary,    
 }
