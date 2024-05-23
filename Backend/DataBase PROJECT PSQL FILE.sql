@@ -53,7 +53,7 @@ CREATE TABLE IF NOT EXISTS Libraries(
 
 CREATE TABLE IF NOT EXISTS LibraryBooks(
 	ISBN char(10) not null,
-	bookName varchar(30) not null,
+	bookName varchar(70) not null,
 	bookGenre varchar(20) not null,
 	PRIMARY KEY (ISBN)
 );
@@ -137,4 +137,13 @@ INSERT INTO librarians VALUES (5, 'Mike',1);
 INSERT INTO librarians VALUES (6, 'Amon',1);
 INSERT INTO librarians VALUES (7, 'Gus',2);
 
+--We create some genres
+INSERT INTO genre VALUES ('Self-help'),('Action'),('Adventure'),('Fantasy'),('Horror'),('Romance'),('Science Fiction');
+
 --Now we create some books
+INSERT INTO Librarybooks VALUES ('7338203989', 'The Atomic Habits', 'Self-help');
+INSERT INTO Librarybooks VALUES ('0486863786', 'The Lord of the Rings', 'Fantasy');
+INSERT INTO Librarybooks VALUES ('1914130405', 'The Hitchhiker''s Guide to the Galaxy', 'Science Fiction');
+INSERT INTO Librarybooks VALUES ('1915058414', 'The Adventures of Huckleberry Finn', 'Adventure');
+INSERT INTO Librarybooks VALUES ('6598700418', 'Gone with the Wind,Margaret Mitchell', 'Romance');
+
