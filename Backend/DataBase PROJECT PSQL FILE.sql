@@ -1,22 +1,5 @@
 -- Database: testdb2
 
-CREATE DATABASE testdb2
-    WITH
-    OWNER = postgres
-    ENCODING = 'UTF8'
-    LC_COLLATE = 'C.UTF-8'
-    LC_CTYPE = 'C.UTF-8'
-    LOCALE_PROVIDER = 'libc'
-    TABLESPACE = pg_default
-    CONNECTION LIMIT = -1
-    IS_TEMPLATE = False;
-
-GRANT TEMPORARY, CONNECT ON DATABASE testdb2 TO PUBLIC;
-
-GRANT ALL ON DATABASE testdb2 TO postgres;
-
-GRANT CREATE, CONNECT ON DATABASE testdb2 TO testuser;
-
 --QUERIES TO DROP ALL TABLE IF NEEDED
 --Dropping all constraints first
 ALTER TABLE Librarians
