@@ -145,5 +145,29 @@ INSERT INTO Librarybooks VALUES ('7338203989', 'The Atomic Habits', 'Self-help')
 INSERT INTO Librarybooks VALUES ('0486863786', 'The Lord of the Rings', 'Fantasy');
 INSERT INTO Librarybooks VALUES ('1914130405', 'The Hitchhiker''s Guide to the Galaxy', 'Science Fiction');
 INSERT INTO Librarybooks VALUES ('1915058414', 'The Adventures of Huckleberry Finn', 'Adventure');
-INSERT INTO Librarybooks VALUES ('6598700418', 'Gone with the Wind,Margaret Mitchell', 'Romance');
+INSERT INTO Librarybooks VALUES ('6598700418', 'Gone with the Wind', 'Romance');
+
+--Create some authors
+INSERT INTO authors VALUES (3,'James Clear');
+INSERT INTO authors VALUES (2,'J.R.R. Tolkien');
+INSERT INTO authors VALUES (4,'Douglas Adams');
+INSERT INTO authors VALUES (1,'Margaret Mitchell');
+INSERT INTO authors VALUES (5,'Mark Twain');
+
+
+--Relate them together
+INSERT INTO bookAuthorRelationship VALUES (3,'7338203989');
+INSERT INTO bookAuthorRelationship VALUES (2,'0486863786');
+INSERT INTO bookAuthorRelationship VALUES (4,'1914130405');
+INSERT INTO bookAuthorRelationship VALUES (1,'1915058414');
+INSERT INTO bookAuthorRelationship VALUES (5,'6598700418');
+
+--Put them in the libraries
+INSERT INTO bookLibraryRelationship VALUES ('7338203989',1,5);
+INSERT INTO bookLibraryRelationship VALUES ('7338203989',2,9);
+INSERT INTO bookLibraryRelationship VALUES ('0486863786',2,5);
+INSERT INTO bookLibraryRelationship VALUES ('1914130405',1,8);
+INSERT INTO bookLibraryRelationship VALUES ('1915058414',2,3);
+INSERT INTO bookLibraryRelationship VALUES ('6598700418',2,1);
+INSERT INTO bookLibraryRelationship VALUES ('6598700418',1,7);
 
