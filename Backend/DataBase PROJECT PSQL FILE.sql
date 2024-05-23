@@ -45,7 +45,6 @@ CREATE TABLE IF NOT EXISTS Librarians(
 
 CREATE TABLE IF NOT EXISTS Libraries(
 	libraryID int not null,
-	librarianSSN char(10) not null,
 	libraryName varchar(50) not null,
 	numberOfBooks int not null default 0,
 	numberOfUsers int not null default 0,
@@ -88,11 +87,6 @@ CREATE TABLE IF NOT EXISTS bookLibraryRelationship(
 --Foreign key to relate the library to its librarian
 ALTER TABLE Librarians
 ADD CONSTRAINT fk_LibrariansPlace FOREIGN KEY (libraryID) REFERENCES Libraries (libraryID)
-ON DELETE CASCADE
-ON UPDATE CASCADE;
-
-ALTER TABLE Libraries
-ADD CONSTRAINT fk_LibraryOwner FOREIGN KEY (librarianSSN) REFERENCES Librarians (SSN)
 ON DELETE CASCADE
 ON UPDATE CASCADE;
 -- "-----------------"
