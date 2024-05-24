@@ -23,10 +23,10 @@ DROP CONSTRAINT IF EXISTS fk_bookAuthor;
 ALTER TABLE bookAuthorRelationship
 DROP CONSTRAINT IF EXISTS fk_bookData;
 
-ALTER TABLE Transactions 
+ALTER TABLE transactions 
 DROP CONSTRAINT IF EXISTS fk_TransactionUser;
 
-ALTER TABLE Transactions
+ALTER TABLE transactions
 DROP CONSTRAINT IF EXISTS fk_TransactionBook;
 
 ALTER TABLE Users 
@@ -44,8 +44,7 @@ DROP TABLE IF EXISTS Genre;
 DROP TABLE IF EXISTS bookAuthorRelationship;
 DROP TABLE IF EXISTS bookLibraryRelationship;
 DROP TABLE IF EXISTS Users;
-DROP TABLE IF EXISTS Transactions;
-
+DROP TABLE IF EXISTS transactions;
 -- Creating the tables
 
 CREATE TABLE IF NOT EXISTS Librarians(
@@ -103,7 +102,7 @@ CREATE TABLE IF NOT EXISTS Users(
     libraryID int NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS Transactions(
+CREATE TABLE IF NOT EXISTS transactions(
     transactionID SERIAL PRIMARY KEY,
     userID int NOT NULL,
     ISBNBook char(10) NOT NULL,
@@ -118,7 +117,6 @@ ALTER TABLE Librarians
 ADD CONSTRAINT fk_LibrariansPlace FOREIGN KEY (libraryID) REFERENCES Libraries (libraryID)
 ON DELETE CASCADE
 ON UPDATE CASCADE;
--- "-----------------"
 
 
 --Foreign key to relate the library to its boooks
@@ -150,19 +148,20 @@ ON DELETE CASCADE
 ON UPDATE CASCADE;
 
 -- Foreign key to relate the user to its library
+
 ALTER TABLE Users
 ADD CONSTRAINT fk_UserLibrary FOREIGN KEY (libraryID) REFERENCES Libraries (libraryID)
 ON DELETE CASCADE
 ON UPDATE CASCADE;
 
 -- Foreign key to relate the user to its transactions
-ALTER TABLE Transactions
+ALTER TABLE transactions
 ADD CONSTRAINT fk_TransactionUser FOREIGN KEY (userID) REFERENCES Users (userID)
 ON DELETE CASCADE
 ON UPDATE CASCADE;
 
 -- Foreign key to relate the book to its transactions
-ALTER TABLE Transactions
+ALTER TABLE transactions
 ADD CONSTRAINT fk_TransactionBook FOREIGN KEY (ISBNBook) REFERENCES LibraryBooks (ISBN)
 ON DELETE CASCADE
 ON UPDATE CASCADE;
@@ -220,10 +219,11 @@ INSERT INTO bookLibraryRelationship VALUES ('1915058414',2,3);
 INSERT INTO bookLibraryRelationship VALUES ('6598700418',2,1);
 INSERT INTO bookLibraryRelationship VALUES ('6598700418',1,7);
 
+
 -- Users
 INSERT INTO Users (name, password, membershipStatus, libraryID) VALUES ('John Doe', 'password123', 'normal', 1);
 INSERT INTO Users (name, password, membershipStatus, libraryID) VALUES ('Jane Smith', 'pass123', 'premium', 2);
 
--- Transactions
-INSERT INTO Transactions (userID, ISBNBook) VALUES (1, '7338203989');
-INSERT INTO Transactions (userID, ISBNBook) VALUES (2, '0486863786');
+-- transactions
+INSERT INTO transactions (userID, ISBNBook) VALUES (1, '7338203989');
+INSERT INTO transactions (userID, ISBNBook) VALUES (2, '0486863786');
