@@ -25,10 +25,10 @@ WHERE transactions.userID = $1 AND LibraryBooks.ISBN = transactions.ISBNBook`;
 const getRecommendedBooks = `
 SELECT LibraryBooks.ISBN, LibraryBooks.bookName
 FROM LibraryBooks
-WHERE EXISTS (
-    SELECT 1
-    FROM transactions
-    WHERE transactions.userID = $1 AND LibraryBooks.ISBN = transactions.ISBNBook
+WHERE LibraryBooks.bookGenre IN (
+    SELECT DISTINCT L.bookGenre
+    FROM transactions, LibraryBooks AS L
+    WHERE transactions.userID = $1 AND L.ISBN = transactions.ISBNBook 
 )`;
 
 /* Post */
