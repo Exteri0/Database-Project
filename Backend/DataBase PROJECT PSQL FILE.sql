@@ -23,17 +23,30 @@ DROP CONSTRAINT IF EXISTS fk_bookAuthor;
 ALTER TABLE bookAuthorRelationship
 DROP CONSTRAINT IF EXISTS fk_bookData;
 
+ALTER TABLE Transactions 
+DROP CONSTRAINT IF EXISTS fk_TransactionUser;
+
+ALTER TABLE Transactions
+DROP CONSTRAINT IF EXISTS fk_TransactionBook;
+
+ALTER TABLE Users 
+DROP CONSTRAINT IF EXISTS fk_UserLibrary;
+
+
+
 --Now Drop ALL TABLES
 
-DROP TABLE Librarians;
-DROP TABLE Libraries;
-DROP TABLE LibraryBooks;
-DROP TABLE Authors;
-DROP TABLE Genre;
-DROP TABLE bookAuthorRelationship;
-DROP TABLE bookLibraryRelationship;
+DROP TABLE IF EXISTS Librarians;
+DROP TABLE IF EXISTS Libraries;
+DROP TABLE IF EXISTS LibraryBooks;
+DROP TABLE IF EXISTS Authors;
+DROP TABLE IF EXISTS Genre;
+DROP TABLE IF EXISTS bookAuthorRelationship;
+DROP TABLE IF EXISTS bookLibraryRelationship;
+DROP TABLE IF EXISTS Users;
+DROP TABLE IF EXISTS Transactions;
 
---"-----------------"
+-- Creating the tables
 
 CREATE TABLE IF NOT EXISTS Librarians(
 	SSN char(10) not null,
@@ -82,6 +95,22 @@ CREATE TABLE IF NOT EXISTS bookLibraryRelationship(
 	numberOfCopies int default 0
 );
 
+CREATE TABLE IF NOT EXISTS Users(
+    userID SERIAL PRIMARY KEY,
+    name varchar(50) NOT NULL,
+    password varchar(50) NOT NULL,
+    membershipStatus varchar(20) CHECK (membershipStatus IN ('normal', 'premium')),
+    libraryID int NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS Transactions(
+    transactionID SERIAL PRIMARY KEY,
+    userID int NOT NULL,
+    ISBNBook char(10) NOT NULL,
+    borrowedOn timestamp DEFAULT CURRENT_TIMESTAMP,
+    returnedOn timestamp
+);
+
 
 --Adding foreign Keys.
 --Foreign key to relate the library to its librarian
@@ -119,6 +148,26 @@ ALTER TABLE bookAuthorRelationship
 ADD CONSTRAINT fk_BookData FOREIGN KEY (ISBNBook) REFERENCES LibraryBooks (ISBN)
 ON DELETE CASCADE
 ON UPDATE CASCADE;
+
+-- Foreign key to relate the user to its library
+ALTER TABLE Users
+ADD CONSTRAINT fk_UserLibrary FOREIGN KEY (libraryID) REFERENCES Libraries (libraryID)
+ON DELETE CASCADE
+ON UPDATE CASCADE;
+
+-- Foreign key to relate the user to its transactions
+ALTER TABLE Transactions
+ADD CONSTRAINT fk_TransactionUser FOREIGN KEY (userID) REFERENCES Users (userID)
+ON DELETE CASCADE
+ON UPDATE CASCADE;
+
+-- Foreign key to relate the book to its transactions
+ALTER TABLE Transactions
+ADD CONSTRAINT fk_TransactionBook FOREIGN KEY (ISBNBook) REFERENCES LibraryBooks (ISBN)
+ON DELETE CASCADE
+ON UPDATE CASCADE;
+
+
 -- "-----------------"
 
 
@@ -171,3 +220,10 @@ INSERT INTO bookLibraryRelationship VALUES ('1915058414',2,3);
 INSERT INTO bookLibraryRelationship VALUES ('6598700418',2,1);
 INSERT INTO bookLibraryRelationship VALUES ('6598700418',1,7);
 
+-- Users
+INSERT INTO Users (name, password, membershipStatus, libraryID) VALUES ('John Doe', 'password123', 'normal', 1);
+INSERT INTO Users (name, password, membershipStatus, libraryID) VALUES ('Jane Smith', 'pass123', 'premium', 2);
+
+-- Transactions
+INSERT INTO Transactions (userID, ISBNBook) VALUES (1, '7338203989');
+INSERT INTO Transactions (userID, ISBNBook) VALUES (2, '0486863786');
