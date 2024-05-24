@@ -7,7 +7,6 @@ router.get('/users', controller.getUsers);
 router.get('/transactions',controller.getTransactions)
 router.get('/users/:id',controller.getUsersById)
 router.get('/transactions/:id',controller.getTransactionsById)
-router.get('/transaction/:users',controller.getUsersTransactions)
 
 /* POST */
 
