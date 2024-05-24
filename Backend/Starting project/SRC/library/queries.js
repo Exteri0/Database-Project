@@ -37,6 +37,11 @@ const checkBookExistsinLibrary = `
     WHERE ISBNBook = $1 AND libraryID = $2
 `;
 
+const checkIfAuthorExistsInDB = `
+    SELECT * FROM Authors
+    WHERE SSN = $1
+`;
+
 const checkIfAuthorOfBookExists = `
     SELECT * FROM bookAuthorRelationship as BLR
     WHERE ISBNBook = $1 and ssnAuthor = $2 
@@ -118,6 +123,7 @@ module.exports = {
     getBookDataByISBN,
     checkBookExistsinLibrary,
     checkIfAuthorOfBookExists,
+    checkIfAuthorExistsInDB,
 
     //Router POST Queries
     addNewAuthorToDB,

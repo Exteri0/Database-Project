@@ -112,7 +112,7 @@ const addBookToLibraryWithCopies = (req, res) => {
     const { ISBN_Entry, bookNameEntry, bookGenreEntry, LibraryIDEntry, numberOfCopiesEntry, authorSSNEntry, authorNameEntry } = req.body;
     console.log("ISBN ENTRY = ", ISBN_Entry)
     console.log("Library ID = ", LibraryIDEntry);
-    pool.query(queries.checkIfAuthorOfBookExists, [ISBN_Entry, authorSSNEntry], (errorQ1, resultsQ1) => {
+    pool.query(queries.checkIfAuthorExistsInDB, [authorSSNEntry], (errorQ1, resultsQ1) => {
         if (errorQ1) throw errorQ1;
         else if (!(resultsQ1.rows.length)) {
             pool.query(queries.addNewAuthorToDB, [authorSSNEntry, authorNameEntry], (errorQ2, resultsQ2) => {
@@ -167,9 +167,10 @@ const addBookToLibraryWithoutCopies = (req, res) => {
     const { ISBN_Entry, bookNameEntry, bookGenreEntry, LibraryIDEntry, authorSSNEntry, authorNameEntry } = req.body;
     console.log("ISBN ENTRY = ", ISBN_Entry)
     console.log("Library ID = ", LibraryIDEntry);
-    pool.query(queries.checkIfAuthorOfBookExists, [ISBN_Entry, authorSSNEntry], (errorQ1, resultsQ1) => {
+    pool.query(queries.checkIfAuthorExistsInDB, [authorSSNEntry], (errorQ1, resultsQ1) => {
         if (errorQ1) throw errorQ1;
         else if (!(resultsQ1.rows.length)) {
+            console.log("Author doesn't exist")
             pool.query(queries.addNewAuthorToDB, [authorSSNEntry, authorNameEntry], (errorQ2, resultsQ2) => {
                 if (errorQ2) throw errorQ2;
                 else console.log("New Author Added!");
