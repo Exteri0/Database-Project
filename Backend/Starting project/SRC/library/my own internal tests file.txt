@@ -1,0 +1,23 @@
+LIBRARY 1 DATA!!!
+[
+    {
+        "isbn": "6598700418",
+        "book_name": "Gone with the Wind",
+        "book_genre": "Romance",
+        "number_copies": 7
+    },
+    {
+        "isbn": "1914130405",
+        "book_name": "The Hitchhiker's Guide to the Galaxy",
+        "book_genre": "Science Fiction",
+        "number_copies": 8,
+        "author_name": "Douglas Adams"
+    },
+    {
+        "isbn": "7338203989",
+        "book_name": "The Atomic Habits",
+        "book_genre": "Self-help",
+        "number_copies": 5
+    }
+]
+
