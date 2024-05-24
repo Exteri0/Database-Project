@@ -111,6 +111,20 @@ const removeBookFromLibrary = `
 `;
 
 
+const reduceNumberOfCopiesPart1 = `
+    UPDATE bookLibraryRelationship
+    SET numberOfCopies = numberOfCopies - $2
+    WHERE ISBNBook = $1;
+`;
+
+const reduceNumberOfCopiesPart2 = `
+    UPDATE Libraries
+    SET numberOfBooks = numberOfBooks - $3 WHERE LibraryID IN (
+    SELECT LibraryID from  bookLibraryRelationship as BLR
+    WHERE BLR.LibraryID = $2 AND ISBNBook = $1
+    )
+`;
+
 
 module.exports = {
     //Router GET Queries

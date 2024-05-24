@@ -7,11 +7,13 @@ LIBRARY 1 DATA!!!
         "number_copies": 7
     },
     {
-        "isbn": "1914130405",
-        "book_name": "The Hitchhiker's Guide to the Galaxy",
-        "book_genre": "Science Fiction",
-        "number_copies": 8,
-        "author_name": "Douglas Adams"
+        "ISBN_Entry": "5111049288 ",
+        "bookNameEntry": "Heisenberger",
+        "bookGenreEntry": "Adventure",
+        "LibraryIDEntry": 69,
+        "numberOfCopiesEntry": 5,
+        "authorSSNEntry": "4",
+        "authorNameEntry": "Douglas Adams"
     },
     {
         "isbn": "7338203989",

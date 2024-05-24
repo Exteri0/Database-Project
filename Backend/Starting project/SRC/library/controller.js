@@ -132,16 +132,16 @@ const addBookToLibraryWithCopies = (req, res) => {
                 else if (!(resultsQ2.rows.length)) {
                     pool.query('BEGIN');
                     pool.query(queries.addBookToLibraryWithCopiesPart1, [ISBN_Entry, bookNameEntry, bookGenreEntry], (errorQ3, resultsQ3) => {
-                        if (errorQ3) {pool.query('ROOLBACK'); throw errorQ3;}
+                        if (errorQ3) {pool.query('ROLLBACK'); throw errorQ3;}
                     })
                     pool.query(queries.addBookToLibraryWithCopiesPart2, [ISBN_Entry, LibraryIDEntry, numberOfCopiesEntry], (errorQ3, resultsQ3) => {
-                        if (errorQ3) {pool.query('ROOLBACK'); throw errorQ3;}
+                        if (errorQ3) {pool.query('ROLLBACK'); throw errorQ3;}
                     })
                     pool.query(queries.addBookToLibraryWithCopiesPart3, [numberOfCopiesEntry, LibraryIDEntry], (errorQ3, resultsQ3) => {
-                        if (errorQ3) {pool.query('ROOLBACK'); throw errorQ3;}
+                        if (errorQ3) {pool.query('ROLLBACK'); throw errorQ3;}
                     })
                     pool.query(queries.addBookToLibraryWithCopiesPart4, [authorSSNEntry, ISBN_Entry], (errorQ3, resultsQ3) => {
-                        if (errorQ3) {pool.query('ROOLBACK'); throw errorQ3;}
+                        if (errorQ3) {pool.query('ROLLBACK'); throw errorQ3;}
                     })
                     pool.query('COMMIT');
                     res.status(201).send("Book Didn't exist, Added with copies Successfully");
@@ -149,10 +149,10 @@ const addBookToLibraryWithCopies = (req, res) => {
                 else {
                     pool.query('BEGIN');
                     pool.query(queries.increaseNumberOfBookCopiesPart1, [ISBN_Entry, numberOfCopiesEntry], (errorQ3, resultsQ3) => {
-                        if (errorQ3) {pool.query('ROOLBACK'); throw errorQ3;}
+                        if (errorQ3) {pool.query('ROLLBACK'); throw errorQ3;}
                     })
                     pool.query(queries.increaseNumberOfBookCopiesPart2, [ISBN_Entry, LibraryIDEntry ,numberOfCopiesEntry], (errorQ3, resultsQ3) => {
-                        if (errorQ3) {pool.query('ROOLBACK'); throw errorQ3;}
+                        if (errorQ3) {pool.query('ROLLBACK'); throw errorQ3;}
                     })
                     pool.query('COMMIT');
                     res.status(201).send("Book Already exists, copies added successfully");
@@ -188,13 +188,13 @@ const addBookToLibraryWithoutCopies = (req, res) => {
                 else if (!(resultsQ2.rows.length)) {
                     pool.query('BEGIN');
                     pool.query(queries.addBookToLibraryWithoutCopiesPart1, [ISBN_Entry, bookNameEntry, bookGenreEntry], (errorQ3, resultsQ3) => {
-                        if (errorQ3) { pool.query('ROOLBACK'); throw errorQ3; }
+                        if (errorQ3) { pool.query('ROLLBACK'); throw errorQ3; }
                     })
                     pool.query(queries.addBookToLibraryWithoutCopiesPart2, [ISBN_Entry, LibraryIDEntry], (errorQ3, resultsQ3) => {
-                        if (errorQ3) { pool.query('ROOLBACK'); throw errorQ3; }
+                        if (errorQ3) { pool.query('ROLLBACK'); throw errorQ3; }
                     })
                     pool.query(queries.addBookToLibraryWithoutCopiesPart3, [authorSSNEntry, ISBN_Entry], (errorQ3, resultsQ3) => {
-                        if (errorQ3) { pool.query('ROOLBACK'); throw errorQ3; }
+                        if (errorQ3) { pool.query('ROLLBACK'); throw errorQ3; }
                     })
                     pool.query('COMMIT');
                     res.status(201).send("Book Didn't exist, Added with copies Successfully");
@@ -224,7 +224,7 @@ BEGINNING OF ROUTER PATCH METHODS
 */
 
 const increaseNumberOfBookCopies = (req, res) => {
-    const { ISBN_Entry, LibraryIDEntry } = req.body;
+    const { ISBN_Entry, LibraryIDEntry, numberOfCopiesEntry } = req.body;
     console.log("ISBN ENTRY = ", ISBN_Entry)
     console.log("Library ID = ", LibraryIDEntry);
     pool.query(queries.getLibrariesById, [LibraryIDEntry], (errorQ1, resultsQ1) => {
@@ -241,10 +241,10 @@ const increaseNumberOfBookCopies = (req, res) => {
                 else {
                     pool.query('BEGIN');
                     pool.query(queries.increaseNumberOfBookCopiesPart1, [ISBN_Entry, numberOfCopiesEntry], (errorQ3, resultsQ3) => {
-                        if (errorQ3) {pool.query('ROOLBACK'); throw errorQ3;}
+                        if (errorQ3) {pool.query('ROLLBACK'); throw errorQ3;}
                     })
                     pool.query(queries.increaseNumberOfBookCopiesPart2, [ISBN_Entry, LibraryIDEntry ,numberOfCopiesEntry], (errorQ3, resultsQ3) => {
-                        if (errorQ3) {pool.query('ROOLBACK'); throw errorQ3;}
+                        if (errorQ3) {pool.query('ROLLBACK'); throw errorQ3;}
                     })
                     pool.query('COMMIT');
                     res.status(201).send("Book Already exists, copies added successfully");
