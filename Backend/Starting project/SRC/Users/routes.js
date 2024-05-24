@@ -17,5 +17,7 @@ router.get('/recommended/:id',controller.getRecommendedBooks)
 /* POST */
 // Add new user
 router.post('/add',controller.addUser);
-
+router.post('/Return',controller.returnBook);
+router.post('/Membership',controller.updateMembership);
+//router.post('/Borrow',controller.BorrowBook);
 module.exports = router;

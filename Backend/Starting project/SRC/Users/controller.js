@@ -116,6 +116,88 @@ const addUser = (req, res) => {
     })
 };
 
+const returnBook = (req, res) => {
+    const {transactionID, ISBN_Entry, LibraryIDEntry} = req.body;
+    pool.query(oqueries.getLibrariesById, [LibraryIDEntry], (errorQ1, resultsQ1) => {
+        if(errorQ1) throw errorQ1
+        else if (!(resultsQ1.rows.length)) {
+            res.send("Library Doesn't Exist!!");
+        }
+        else {
+            pool.query(oqueries.checkBookExistsinLibrary, [ISBN_Entry, LibraryIDEntry], (errorQ2, resultsQ2) => {
+                if (errorQ2) throw errorQ2;
+                else if (!(resultsQ2.rows.length)) {
+                    res.send("Book Doesn't Exist!!");
+                }
+                else {
+                    pool.query('BEGIN');
+                    pool.query(queries.returnBook, [transactionID], (errorQ3, resultsQ3) => {
+                        if (errorQ3) {pool.query('ROLLBACK'); throw errorQ3;}
+                    })
+                    pool.query(oqueries.increaseNumberOfBookCopiesPart1, [ISBN_Entry, 1], (errorQ3, resultsQ3) => {
+                        if (errorQ3) {pool.query('ROLLBACK'); throw errorQ3;}
+                    })
+                    pool.query(oqueries.increaseNumberOfBookCopiesPart2, [ISBN_Entry, LibraryIDEntry ,1], (errorQ3, resultsQ3) => {
+                        if (errorQ3) {pool.query('ROLLBACK'); throw errorQ3;}
+                    })
+                    pool.query('COMMIT');
+                    res.status(201).send("Book Already exists, copies added successfully");
+                }
+            })
+        }
+    })   
+};
+
+
+const updateMembership = (req, res) => {
+    const {MembershipStatuesEntry, UserIDEntry} = req.body;
+    pool.query(queries.updateMembership, [MembershipStatuesEntry, UserIDEntry], (error, results) => {
+        if (error) throw error;
+        res.status(201).send("Membership Updated.");
+    })
+};
+
+/*
+const BorrowBook = (req,res) => {
+    const {userIDEntry, ISBN_Entry, LibraryIDEntry} = req.body;
+    pool.query(oqueries.getLibrariesById, [LibraryIDEntry], (errorQ1, resultsQ1) => {
+        if (errorQ1) throw errorQ1;
+        else if (!(resultsQ1.rows.length)) {
+            res.send("Library Doesn't Exist");
+        }
+        else {
+            pool.query(oqueries.checkBookExistsinLibrary, [ISBN_Entry, LibraryIDEntry], (errorQ2, resultsQ2) => {
+                if (errorQ2) throw errorQ2;
+                else if (!(resultsQ2.rows.length)) {
+                    res.send("Book Doesn't Exist");
+                }
+                else {
+                    pool.query(queries.getNumberUsersCurrentBorrowed, [userIDEntry], (errorQ2, resultsQ2) => {
+                        if (errorQ2) throw errorQ2;
+                        pool.query(queries.getUsersMembership, [userIDEntry], (errorQ3, resultsQ3) => {
+                            if (errorQ3) throw errorQ3;
+                            if ((resultsQ2 == 3 && resultsQ3 == "normal") || (resultsQ2 == 5 && resultsQ3 == "premium")){
+                                res.send("Membership limit Exceeded!!");
+                            }
+                            else {
+                                pool.query('BEGIN');
+                                pool.query(oqueries.removeBookFromLibrary, [ISBN_Entry, LibraryIDEntry], (errorQ4, resultsQ4) => {
+                                    if (errorQ4) {pool.query('ROLLBACK'); throw errorQ4;}
+                                } )
+                                pool.query(queries.BorrowBook, [userIDEntry, ISBN_Entry], (errorQ4, resultsQ4) => {
+                                    if (errorQ4) {pool.query('ROLLBACK'); throw errorQ4;}
+                                } )
+                                pool.query('COMMIT');
+                                res.status(201).send("Book has been borrowed successfully.");
+                            }
+                        })
+                    })
+                }
+            })
+        }
+    })
+}
+*/
 
 
 module.exports = {
@@ -130,5 +212,8 @@ module.exports = {
     getNumberUsersCurrentBorrowed,
     getUsersTags,
     getRecommendedBooks,
-    addUser
+    addUser,
+    returnBook,
+    updateMembership,
+    //BorrowBook
 }

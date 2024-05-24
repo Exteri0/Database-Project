@@ -3,6 +3,7 @@ const getUsers = "SELECT * FROM users";
 const getTransactions = "SELECT * FROM transactions";
 const getUsersById = "SELECT * FROM users WHERE userID = $1";
 const getTransactionsById = "SELECT * FROM transactions WHERE transactionID = $1";
+const getUsersMembership = "SELECT membershipStatus FROM users WHERE userID = $1"
 
 const getUsersAllBorrowed = `
 SELECT transactions.transactionID,LibraryBooks.bookName,transactions.ISBNBook,transactions.borrowedOn 
@@ -34,9 +35,24 @@ WHERE LibraryBooks.bookGenre IN (
 /* Post */
 const addUser = `INSERT INTO Users (name, password, membershipStatus, libraryID) VALUES ($1, $2, $3, $4)`;
 
+// User return the book to a library RETURN 
+const returnBook = `
+UPDATE transactions
+SET returnedOn = CURRENT_TIMESTAMP
+WHERE transactionID = $1;
+`;
+
+// Update Membership
+const updateMembership = `
+UPDATE Users
+SET membershipStatus = $1
+WHERE userID = $2;
+`;
 
 // Add book to user [Username,ID,Library Key] BORROW
-// 
+const BorrowBook = `
+INSERT INTO transactions (userID, ISBNBook) VALUES ($1, $2);
+`;
 
 
 module.exports = {
@@ -45,11 +61,15 @@ module.exports = {
     getTransactions,
     getUsersById,
     getTransactionsById,
+    getUsersMembership,
     getUsersAllBorrowed,
     getUsersCurrentBorrowed,
     getNumberUsersAllBorrowed,
     getNumberUsersCurrentBorrowed,
     getUsersTags,
     getRecommendedBooks,
-    addUser
+    addUser,
+    returnBook,
+    updateMembership,
+    BorrowBook
 }
