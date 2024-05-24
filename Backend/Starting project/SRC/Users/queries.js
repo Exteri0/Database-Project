@@ -32,11 +32,10 @@ WHERE LibraryBooks.bookGenre IN (
 )`;
 
 /* Post */
+const addUser = `INSERT INTO Users (name, password, membershipStatus, libraryID) VALUES ($1, $2, $3, $4)`;
 
 
-
-// Add user
-// Add book to user [Username,ID,Library Key]
+// Add book to user [Username,ID,Library Key] BORROW
 // 
 
 
@@ -51,5 +50,6 @@ module.exports = {
     getNumberUsersAllBorrowed,
     getNumberUsersCurrentBorrowed,
     getUsersTags,
-    getRecommendedBooks
+    getRecommendedBooks,
+    addUser
 }

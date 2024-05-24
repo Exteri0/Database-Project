@@ -3,22 +3,19 @@ const controller = require('./controller');
 const router = Router();
 
 /* GET */
-router.get('/users', controller.getUsers);
+router.get('/', controller.getUsers);
 router.get('/transactions',controller.getTransactions)
-router.get('/users/:id',controller.getUsersById)
+router.get('/:id',controller.getUsersById)
 router.get('/transactions/:id',controller.getTransactionsById)
-router.get('/users/all/:id',controller.getUsersAllBorrowed)
-router.get('/users/current/:id',controller.getUsersCurrentBorrowed)
-router.get('/users/all/number/:id',controller.getNumberUsersAllBorrowed)
-router.get('/users/current/number/:id',controller.getNumberUsersCurrentBorrowed)
-router.get('/users/tags/:id',controller.getUsersTags)
-router.get('/users/recommended/:id',controller.getRecommendedBooks)
-
-
-
-
+router.get('/all/:id',controller.getUsersAllBorrowed)
+router.get('/current/:id',controller.getUsersCurrentBorrowed)
+router.get('/all/number/:id',controller.getNumberUsersAllBorrowed)
+router.get('/current/number/:id',controller.getNumberUsersCurrentBorrowed)
+router.get('/tags/:id',controller.getUsersTags)
+router.get('/recommended/:id',controller.getRecommendedBooks)
 
 /* POST */
-
+// Add new user
+router.post('/add',controller.addUser);
 
 module.exports = router;

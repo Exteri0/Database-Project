@@ -1,5 +1,6 @@
 const pool = require('../../database');
 const queries = require('./queries');
+const oqueries = require('../library/queries');
 
 /*
 ----------------------------------------------------------------------------
@@ -93,6 +94,28 @@ BEGINNING OF ROUTER POST METHODS
 
 ----------------------------------------------------------------------------
 */
+const addUser = (req, res) => {
+    const {name, password, membershipStatus, libraryID} = req.body;
+    pool.query(oqueries.getLibrariesById, [libraryID], (errorQ1, resultsQ1) => {
+        if (errorQ1){
+            res.send("Error 1");
+            throw errorQ1;
+        }
+        else if (!(resultsQ1.rows.length)) {
+            res.send("Library Doesn\'t exist!!");
+        }
+        else {
+            pool.query(queries.addUser, [name, password, membershipStatus, libraryID], (errorQ2, resultsQ2) => {
+                if (errorQ2){
+                    res.send("Error 1");
+                    throw errorQ2;
+                }
+                res.status(201).send("User Added Successfully");
+            })
+        }
+    })
+};
+
 
 
 module.exports = {
@@ -106,5 +129,6 @@ module.exports = {
     getNumberUsersAllBorrowed,
     getNumberUsersCurrentBorrowed,
     getUsersTags,
-    getRecommendedBooks
+    getRecommendedBooks,
+    addUser
 }
