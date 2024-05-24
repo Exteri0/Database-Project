@@ -1,5 +1,6 @@
 const express = require('express');
 const libraryRoutes = require('./SRC/library/routes');
+const UsersRoutes = require('./SRC/Users/routes');
 const app = express();
 const port = 3000;
 
@@ -10,5 +11,6 @@ app.get("/", (req, res) => {
 })
 
 app.use('/testapi/v1/libraries', libraryRoutes);
+app.use('/testapi/v1/users', UsersRoutes);
 
 app.listen(port, () => console.log('App listening on port', port));
