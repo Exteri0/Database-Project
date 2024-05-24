@@ -39,7 +39,37 @@ const getTransactionsById = (req, res) => {
     })
 };
 
+const getUsersAllBorrowed = (req, res) => {
+    const UserIDEntry = parseInt(req.params.id);
+    pool.query(queries.getUsersAllBorrowed, [UserIDEntry], (error, results) => {
+        if (error) throw error;
+        res.status(200).json(results.rows);
+    })
+};
 
+const getUsersCurrentBorrowed = (req, res) => {
+    const UserIDEntry = parseInt(req.params.id);
+    pool.query(queries.getUsersCurrentBorrowed, [UserIDEntry], (error, results) => {
+        if (error) throw error;
+        res.status(200).json(results.rows);
+    })
+};
+
+const getNumberUsersAllBorrowed = (req, res) => {
+    const UserIDEntry = parseInt(req.params.id);
+    pool.query(queries.getNumberUsersAllBorrowed, [UserIDEntry], (error, results) => {
+        if (error) throw error;
+        res.status(200).json(results.rows);
+    })
+};
+
+const getNumberUsersCurrentBorrowed = (req, res) => {
+    const UserIDEntry = parseInt(req.params.id);
+    pool.query(queries.getNumberUsersCurrentBorrowed, [UserIDEntry], (error, results) => {
+        if (error) throw error;
+        res.status(200).json(results.rows);
+    })
+};
 
 /*
 ----------------------------------------------------------------------------
@@ -55,5 +85,9 @@ module.exports = {
     getUsers,
     getTransactions,
     getUsersById,
-    getTransactionsById
+    getTransactionsById,
+    getUsersAllBorrowed,
+    getUsersCurrentBorrowed,
+    getNumberUsersAllBorrowed,
+    getNumberUsersCurrentBorrowed
 }
