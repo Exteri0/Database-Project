@@ -71,6 +71,21 @@ const getNumberUsersCurrentBorrowed = (req, res) => {
     })
 };
 
+const getUsersTags = (req, res) => {
+    const UserIDEntry = parseInt(req.params.id);
+    pool.query(queries.getUsersTags, [UserIDEntry], (error, results) => {
+        if (error) throw error;
+        res.status(200).json(results.rows);
+    })
+};
+
+const getRecommendedBooks = (req, res) => {
+    const UserIDEntry = parseInt(req.params.id);
+    pool.query(queries.getRecommendedBooks, [UserIDEntry], (error, results) => {
+        if (error) throw error;
+        res.status(200).json(results.rows);
+    })
+};
 /*
 ----------------------------------------------------------------------------
 
@@ -89,5 +104,7 @@ module.exports = {
     getUsersAllBorrowed,
     getUsersCurrentBorrowed,
     getNumberUsersAllBorrowed,
-    getNumberUsersCurrentBorrowed
+    getNumberUsersCurrentBorrowed,
+    getUsersTags,
+    getRecommendedBooks
 }

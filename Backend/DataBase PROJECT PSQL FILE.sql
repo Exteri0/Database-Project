@@ -227,3 +227,33 @@ INSERT INTO Users (name, password, membershipStatus, libraryID) VALUES ('Jane Sm
 -- transactions
 INSERT INTO transactions (userID, ISBNBook) VALUES (1, '7338203989');
 INSERT INTO transactions (userID, ISBNBook) VALUES (2, '0486863786');
+
+-- Additional Examples:
+
+-- Inserting more libraries
+INSERT INTO Libraries VALUES (3, 'Central Library', 25, 10);
+INSERT INTO Libraries VALUES (4, 'City Public Library', 30, 15);
+
+-- Inserting more librarians
+INSERT INTO Librarians VALUES ('1234567890', 'Emily', 3);
+INSERT INTO Librarians VALUES ('0987654321', 'David', 4);
+
+-- Inserting more genres
+INSERT INTO Genre VALUES ('Mystery');
+INSERT INTO Genre VALUES ('Thriller');
+
+-- Inserting more books
+INSERT INTO LibraryBooks VALUES ('1234567890', 'The Da Vinci Code', 'Mystery');
+INSERT INTO LibraryBooks VALUES ('0987654321', 'Gone Girl', 'Thriller');
+
+-- Inserting more authors
+INSERT INTO Authors VALUES ('1111111111', 'Dan Brown');
+INSERT INTO Authors VALUES ('2222222222', 'Gillian Flynn');
+
+-- Relating additional authors to books
+INSERT INTO bookAuthorRelationship VALUES ('1111111111', '1234567890');
+INSERT INTO bookAuthorRelationship VALUES ('2222222222', '0987654321');
+
+-- Adding more transactions
+INSERT INTO transactions (userID, ISBNBook) VALUES (1, '1234567890');
+INSERT INTO transactions (userID, ISBNBook) VALUES (2, '0987654321');

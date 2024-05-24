@@ -17,12 +17,23 @@ WHERE userID = $1 AND LibraryBooks.ISBN = transactions.ISBNBook AND returnedOn I
 const getNumberUsersAllBorrowed = `SELECT COUNT(transactionID) FROM transactions WHERE userID = $1`;
 const getNumberUsersCurrentBorrowed = "SELECT COUNT(transactionID) FROM transactions WHERE userID = $1 AND returnedOn IS NULL";
 
+const getUsersTags = `
+SELECT DISTINCT LibraryBooks.bookGenre
+FROM transactions, LibraryBooks
+WHERE transactions.userID = $1 AND LibraryBooks.ISBN = transactions.ISBNBook`;
 
-// Get Tags for user
-// Get Recommended Books
-
+const getRecommendedBooks = `
+SELECT LibraryBooks.ISBN, LibraryBooks.bookName
+FROM LibraryBooks
+WHERE EXISTS (
+    SELECT 1
+    FROM transactions
+    WHERE transactions.userID = $1 AND LibraryBooks.ISBN = transactions.ISBNBook
+)`;
 
 /* Post */
+
+
 
 // Add user
 // Add book to user [Username,ID,Library Key]
@@ -38,5 +49,7 @@ module.exports = {
     getUsersAllBorrowed,
     getUsersCurrentBorrowed,
     getNumberUsersAllBorrowed,
-    getNumberUsersCurrentBorrowed
+    getNumberUsersCurrentBorrowed,
+    getUsersTags,
+    getRecommendedBooks
 }
