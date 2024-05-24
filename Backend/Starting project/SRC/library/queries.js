@@ -57,7 +57,7 @@ const addNewAuthorToDB = `
 
 //Queries to add a book, given its copies to a library
 const addBookToLibraryWithCopiesPart1 = `
-    INSERT INTO Librarybooks (ISBN, bookName, bookGenre) VALUES ($1, %2, $3);
+    INSERT INTO Librarybooks (ISBN, bookName, bookGenre) VALUES ($1, $2, $3);
 `;
 
 const addBookToLibraryWithCopiesPart2 = `
