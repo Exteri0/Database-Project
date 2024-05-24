@@ -12,7 +12,11 @@ router.get('/:ISBN/Authors', controller.getBookAuthors);
 router.get('/:ISBN/:id', controller.checkBookExistsinLibrary);
 
 router.post('/bookAddCopies', controller.addBookToLibraryWithCopies);
-//router.post('/bookAddNoCopies', controller.addBookToLibraryWithoutCopies);
+router.post('/bookAddNoCopies', controller.addBookToLibraryWithoutCopies);
+
+router.patch('/BookCopyUpdate', controller.increaseNumberOfBookCopies);
+
+router.delete('/RemoveBook', controller.removeBookFromLibrary);
 
 
 

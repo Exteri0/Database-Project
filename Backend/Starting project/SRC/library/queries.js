@@ -50,7 +50,7 @@ const addNewAuthorToDB = `
     INSERT INTO Authors (SSN, authorName) VALUES = ($1, $2)
 `;
 
-
+//Queries to add a book, given its copies to a library
 const addBookToLibraryWithCopiesPart1 = `
     INSERT INTO Librarybooks (ISBN, bookName, bookGenre) VALUES ($1, %2, $3);
 `;
@@ -67,6 +67,7 @@ const addBookToLibraryWithCopiesPart4 = `
     INSERT INTO bookAuthorRelationship (ssnAuthor, ISBNBook) VALUES ($1,$2)
 `;
 
+//Queries to add copies of the book if it exists already in the library
 const increaseNumberOfBookCopiesPart1 = `
     UPDATE bookLibraryRelationship
     SET numberOfCopies = numberOfCopies + $2
@@ -77,14 +78,31 @@ const increaseNumberOfBookCopiesPart2 = `
     SET numberOfBooks = numberOfBooks + $3 WHERE LibraryID IN (
     SELECT LibraryID from  bookLibraryRelationship as BLR
     WHERE BLR.LibraryID = $2 AND ISBNBook = $1
-    )`;
+    )
+`;
 
+
+//Queries to add book to the library, but without any copies
 const addBookToLibraryWithoutCopiesPart1 = `
     INSERT INTO Librarybooks (ISBN, bookName, bookGenre) VALUES ($1, %2, $3);
 `;
-
 const addBookToLibraryWithoutCopiesPart2 = `
-    INSERT INTO bookLibraryRelationship (ISBNBook, LibraryID) VALUES ($1, $4);
+    INSERT INTO bookLibraryRelationship (ISBNBook, LibraryID) VALUES ($1, $2);
+`;
+const addBookToLibraryWithoutCopiesPart3 = `
+    INSERT INTO bookAuthorRelationship (ssnAuthor, ISBNBook) VALUES ($1,$2)
+`;
+
+//Queries to remove a book from a library
+const removeBookFromLibrary = `
+    WITH deleted AS (
+        DELETE FROM bookLibraryRelationship
+        WHERE ISBNBook = $1 AND LibraryID = $2
+        RETURNING numberOfCopies
+    )
+    UPDATE Libraries
+    SET numberOfBooks = numberOfBooks - (SELECT numberOfCopies FROM deleted)
+    WHERE LibraryID = $2;
 `;
 
 
@@ -111,8 +129,12 @@ module.exports = {
 
     addBookToLibraryWithoutCopiesPart1,
     addBookToLibraryWithoutCopiesPart2,
+    addBookToLibraryWithoutCopiesPart3,
 
+    //Router PATCH Queries
     increaseNumberOfBookCopiesPart1,
     increaseNumberOfBookCopiesPart2,
-    
+
+    //router DELETE Queries
+    removeBookFromLibrary,
 }
