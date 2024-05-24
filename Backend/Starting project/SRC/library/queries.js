@@ -154,6 +154,8 @@ module.exports = {
     //Router PATCH Queries
     increaseNumberOfBookCopiesPart1,
     increaseNumberOfBookCopiesPart2,
+    reduceNumberOfCopiesPart1,
+    reduceNumberOfCopiesPart2,
 
     //router DELETE Queries
     removeBookFromLibrary,
