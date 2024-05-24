@@ -3,6 +3,7 @@ const controller = require('./controller');
 const router = Router();
 
 router.get('/', controller.getLibraries);
+router.get('/Authors', controller.getAllAuthorsInDB);
 router.get('/:id', controller.getLibrariesById);
 router.get('/:id/Books', controller.showBooksInaLibrary);
 router.get('/:id/noBooks', controller.getNoBooksFromLibrary);
