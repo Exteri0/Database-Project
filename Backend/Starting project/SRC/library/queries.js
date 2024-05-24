@@ -89,7 +89,7 @@ const increaseNumberOfBookCopiesPart2 = `
 
 //Queries to add book to the library, but without any copies
 const addBookToLibraryWithoutCopiesPart1 = `
-    INSERT INTO Librarybooks (ISBN, bookName, bookGenre) VALUES ($1, %2, $3);
+    INSERT INTO Librarybooks (ISBN, bookName, bookGenre) VALUES ($1, $2, $3);
 `;
 const addBookToLibraryWithoutCopiesPart2 = `
     INSERT INTO bookLibraryRelationship (ISBNBook, LibraryID) VALUES ($1, $2);
