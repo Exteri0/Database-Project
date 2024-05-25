@@ -38,6 +38,15 @@ const getNoBooksFromLibrary = (req, res) => {
     })
 };
 
+const GetNumberOfBooksInLibrary = (req, res) => {
+    const ISBN_Entry = req.params.ISBN
+    const LibraryIDEntry = parseInt(req.params.id);
+    pool.query(queries.GetNumberOfBooksInLibrary, [ISBN_Entry,LibraryIDEntry], (error, results) => {
+        if (error) throw error;
+        res.status(200).json(results.rows);
+    })
+};
+
 const getBookDataByISBN = (req, res) => {
     const ISBN_Entry = req.params.ISBN;
     pool.query(queries.getBookDataByISBN, [ISBN_Entry], (error, results) => {
@@ -310,6 +319,7 @@ module.exports = {
     getBookDataByISBN,
     checkBookExistsinLibrary,
     getAllAuthorsInDB,
+    GetNumberOfBooksInLibrary,
 
     //POST Methods
     addBookToLibraryWithCopies,

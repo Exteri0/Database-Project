@@ -47,6 +47,14 @@ const checkIfAuthorOfBookExists = `
     WHERE ISBNBook = $1 and ssnAuthor = $2 
 `;
 
+// Myron
+const GetNumberOfBooksInLibrary =`
+    SELECT numberOfCopies
+    FROM bookLibraryRelationship
+    WHERE ISBNBook = $1 AND libraryID = $2
+`;
+
+
 /*
     HERE STARTS THE QUERY STATEMENTS FOR ADD FUNCTIONALITIES
 */
@@ -138,6 +146,7 @@ module.exports = {
     checkBookExistsinLibrary,
     checkIfAuthorOfBookExists,
     checkIfAuthorExistsInDB,
+    GetNumberOfBooksInLibrary,
 
     //Router POST Queries
     addNewAuthorToDB,

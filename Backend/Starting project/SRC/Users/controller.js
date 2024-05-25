@@ -32,6 +32,14 @@ const getUsersById = (req, res) => {
     })
 };
 
+const getUsersMembership = (req, res) => {
+    const UserIDEntry = parseInt(req.params.id);
+    pool.query(queries.getUsersMembership, [UserIDEntry], (error, results) => {
+        if (error) throw error;
+        res.status(200).json(results.rows);
+    })
+};
+
 const getTransactionsById = (req, res) => {
     const TransactionIDEntry = parseInt(req.params.id);
     pool.query(queries.getTransactionsById, [TransactionIDEntry], (error, results) => {
@@ -150,54 +158,72 @@ const returnBook = (req, res) => {
 
 
 const updateMembership = (req, res) => {
-    const {MembershipStatuesEntry, UserIDEntry} = req.body;
-    pool.query(queries.updateMembership, [MembershipStatuesEntry, UserIDEntry], (error, results) => {
+    const { MembershipStatusEntry, UserIDEntry } = req.body;
+    pool.query(queries.updateMembership, [MembershipStatusEntry, UserIDEntry], (error, results) => {
         if (error) throw error;
         res.status(201).send("Membership Updated.");
     })
 };
 
-/*
+
 const BorrowBook = (req,res) => {
     const {userIDEntry, ISBN_Entry, LibraryIDEntry} = req.body;
     pool.query(oqueries.getLibrariesById, [LibraryIDEntry], (errorQ1, resultsQ1) => {
         if (errorQ1) throw errorQ1;
         else if (!(resultsQ1.rows.length)) {
             res.send("Library Doesn't Exist");
+            throw errorQ1;
         }
         else {
             pool.query(oqueries.checkBookExistsinLibrary, [ISBN_Entry, LibraryIDEntry], (errorQ2, resultsQ2) => {
                 if (errorQ2) throw errorQ2;
                 else if (!(resultsQ2.rows.length)) {
                     res.send("Book Doesn't Exist");
+                    throw errorQ2;
                 }
                 else {
-                    pool.query(queries.getNumberUsersCurrentBorrowed, [userIDEntry], (errorQ2, resultsQ2) => {
+                    pool.query(oqueries.GetNumberOfBooksInLibrary, [ISBN_Entry, LibraryIDEntry], (errorQ2, resultsQ2) => {
                         if (errorQ2) throw errorQ2;
-                        pool.query(queries.getUsersMembership, [userIDEntry], (errorQ3, resultsQ3) => {
-                            if (errorQ3) throw errorQ3;
-                            if ((resultsQ2 == 3 && resultsQ3 == "normal") || (resultsQ2 == 5 && resultsQ3 == "premium")){
-                                res.send("Membership limit Exceeded!!");
-                            }
-                            else {
-                                pool.query('BEGIN');
-                                pool.query(oqueries.removeBookFromLibrary, [ISBN_Entry, LibraryIDEntry], (errorQ4, resultsQ4) => {
-                                    if (errorQ4) {pool.query('ROLLBACK'); throw errorQ4;}
-                                } )
-                                pool.query(queries.BorrowBook, [userIDEntry, ISBN_Entry], (errorQ4, resultsQ4) => {
-                                    if (errorQ4) {pool.query('ROLLBACK'); throw errorQ4;}
-                                } )
-                                pool.query('COMMIT');
-                                res.status(201).send("Book has been borrowed successfully.");
-                            }
-                        })
-                    })
+                        else if (!(resultsQ2.rows.length)) {
+                            res.send("Book Doesn't Exist.");
+                            throw errorQ2;
+                        }
+                        else if (resultsQ2.rows[0].numberofcopies == 0){
+                            res.send("Not Enough Books Exist.");
+                            throw errorQ2;
+                        }
+                        else {
+                            pool.query(queries.getNumberUsersCurrentBorrowed, [userIDEntry], (errorQ2, resultsQ2) => {
+                                if (errorQ2) throw errorQ2;
+                                pool.query(queries.getUsersMembership, [userIDEntry], (errorQ3, resultsQ3) => {
+                                    if (errorQ3) throw errorQ3;
+                                    if ((resultsQ2.rows[0].count == 3 && resultsQ3.rows[0].membershipstatus == "normal") || (resultsQ2.rows[0].count == 5 && resultsQ3.rows[0].membershipstatus == "premium")){
+                                        res.send("Membership limit Exceeded!!");
+                                    }
+                                    else {
+                                        pool.query('BEGIN');
+                                        pool.query(oqueries.reduceNumberOfCopiesPart1, [ISBN_Entry, 1], (errorQ4, resultsQ4) => {
+                                            if (errorQ4) {pool.query('ROLLBACK'); throw errorQ4;}
+                                        } )
+                                        pool.query(oqueries.reduceNumberOfCopiesPart2, [ISBN_Entry, LibraryIDEntry,1], (errorQ4, resultsQ4) => {
+                                            if (errorQ4) {pool.query('ROLLBACK'); throw errorQ4;}
+                                        } )
+                                        pool.query(queries.BorrowBook, [userIDEntry, ISBN_Entry], (errorQ4, resultsQ4) => {
+                                            if (errorQ4) {pool.query('ROLLBACK'); throw errorQ4;}
+                                        } )
+                                        pool.query('COMMIT');
+                                        res.status(201).send("Book has been borrowed successfully.");
+                                    }
+                                })
+                            })
+                        }
+                     })
                 }
             })
         }
     })
 }
-*/
+
 
 
 module.exports = {
@@ -205,6 +231,7 @@ module.exports = {
     getUsers,
     getTransactions,
     getUsersById,
+    getUsersMembership,
     getTransactionsById,
     getUsersAllBorrowed,
     getUsersCurrentBorrowed,
@@ -215,5 +242,5 @@ module.exports = {
     addUser,
     returnBook,
     updateMembership,
-    //BorrowBook
+    BorrowBook
 }
