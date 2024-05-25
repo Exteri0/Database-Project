@@ -1,0 +1,27 @@
+.card-container {
+    position: relative;
+    width: 370px;
+    height: 290px;
+    img {
+        height: 100%;
+        width: 100%;
+        z-index: 0;
+    }
+    span {
+        z-index: 10;
+        padding: 20px 50px;
+        color: #717171;
+        font-size: 16px;
+        position: absolute;
+        bottom: -15px;
+        text-align: center;
+        font-size: x-large;
+        width: 60%;
+        left: 25px;
+        right: 25px;
+        height: 40px;
+        border-radius: 10px;
+        box-shadow: 10px;
+        background-color: #eff5fa;
+    }
+}

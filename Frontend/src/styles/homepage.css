@@ -49,5 +49,12 @@
         }
     }
     #libraries-section {
+        padding: 0px 50px;
+        .library-cards {
+            display: flex;
+            flex-direction: row;
+            gap: 10px;
+            justify-content: center;
+        }
     }
 }
