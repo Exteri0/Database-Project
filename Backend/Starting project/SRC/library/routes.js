@@ -10,6 +10,7 @@ router.get('/:id/noBooks', controller.getNoBooksFromLibrary);
 router.get('/:ISBN/Describe', controller.getBookDataByISBN);
 router.get('/:ISBN/Authors', controller.getBookAuthors);
 router.get('/:ISBN/:id', controller.checkBookExistsinLibrary);
+router.get('/:ISBN/:id/number',controller.GetNumberOfBooksInLibrary);
 
 router.post('/bookAddCopies', controller.addBookToLibraryWithCopies);
 router.post('/bookAddNoCopies', controller.addBookToLibraryWithoutCopies);
