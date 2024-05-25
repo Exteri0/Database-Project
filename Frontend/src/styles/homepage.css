@@ -1,8 +1,53 @@
-.big-container {
+.home-container {
     border: 1px solid black;
     padding: 0px;
     margin: 0px;
-    .container {
-        background-color: aqua;
+    display: flex;
+    flex-direction: column;
+    .hero-section {
+        height: 550px;
+        width: 100%;
+        background-color: #eff5fa;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        align-items: center;
+        gap: auto;
+        .text-cta {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            font-size: 70px;
+            font-weight: 500px;
+            div {
+                display: flex;
+                flex-direction: row;
+                align-items: baseline;
+                .logo {
+                    height: 75px;
+                }
+            }
+            .login-cta {
+                width: 120px;
+                border-radius: 10px;
+                background-color: #4caf4f;
+                height: 50px;
+                color: white;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                border: 1px solid #4caf4f;
+                font-size: 20px;
+                text-decoration: none;
+                margin-top: 15px;
+                &:hover {
+                    color: #4caf4f;
+                    background-color: white;
+                    transition: 0.1s ease-in-out;
+                }
+            }
+        }
+    }
+    #libraries-section {
     }
 }
