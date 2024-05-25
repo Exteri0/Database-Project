@@ -1,0 +1,42 @@
+.nav-bar {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 0px 30px;
+    height: 80px;
+    align-items: center;
+    .logo-and-title {
+        height: 30px;
+        display: flex;
+        gap: 10px;
+        flex-direction: row;
+        align-items: center;
+        .logo {
+            height: 100%;
+            width: auto;
+        }
+    }
+    border: 1px solid black;
+    a {
+        font-weight: 300;
+        color: inherit;
+        text-decoration: none;
+        font-size: 20px;
+    }
+    .login-cta {
+        width: 100px;
+        border-radius: 10px;
+        background-color: #4caf4f;
+        height: 40px;
+        color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: 1px solid #4caf4f;
+        &:hover {
+            color: #4caf4f;
+            background-color: white;
+            transition: 0.1s ease-in-out;
+        }
+    }
+}
