@@ -161,21 +161,21 @@ const returnBook = async (req, res) => {
         await client.query('BEGIN');
 
         const resultsQ1 = await client.query(oqueries.getLibrariesById, [LibraryIDEntry]);
-        if (resultsQ1.rows.length === 0) {
+        if (resultsQ1.rows.length == 0) {
             await client.query('ROLLBACK');
             res.send("Library Doesn't Exist!!");
             return;
         }
 
         const resultsQ2 = await client.query(oqueries.checkBookExistsinLibrary, [ISBN_Entry, LibraryIDEntry]);
-        if (resultsQ2.rows.length === 0) {
+        if (resultsQ2.rows.length == 0) {
             await client.query('ROLLBACK');
             res.send("Book Doesn't Exist!!");
             return;
         }
 
         const resultsQ3 = await client.query(queries.getTransactionsById, [transactionID]);
-        if (resultsQ3.rows.length === 0) {
+        if (resultsQ3.rows.length == 0) {
             await client.query('ROLLBACK');
             res.send("Book Doesn't Exist!!");
             return;
@@ -204,7 +204,7 @@ const returnBook = async (req, res) => {
 
 const updateMembership = (req, res) => {
     const { MembershipStatusEntry, UserIDEntry } = req.body;
-    if (MembershipStatusEntry != "normal" || MembershipStatusEntry != "premium"){
+    if (MembershipStatusEntry != "normal" && MembershipStatusEntry != "premium"){
         res.status(500).send("Wrong Membership!");
     }
     pool.query(queries.updateMembership, [MembershipStatusEntry, UserIDEntry], (error, results) => {
@@ -223,26 +223,26 @@ const BorrowBook = async (req, res) => {
         await client.query('BEGIN');
 
         const resultsQ1 = await client.query(oqueries.getLibrariesById, [LibraryIDEntry]);
-        if (resultsQ1.rows.length === 0) {
+        if (resultsQ1.rows.length == 0) {
             await client.query('ROLLBACK');
             res.send("Library Doesn't Exist");
             return;
         }
 
         const resultsQ2 = await client.query(oqueries.checkBookExistsinLibrary, [ISBN_Entry, LibraryIDEntry]);
-        if (resultsQ2.rows.length === 0) {
+        if (resultsQ2.rows.length == 0) {
             await client.query('ROLLBACK');
             res.send("Book Doesn't Exist");
             return;
         }
 
         const resultsQ3 = await client.query(oqueries.GetNumberOfBooksInLibrary, [ISBN_Entry, LibraryIDEntry]);
-        if (resultsQ3.rows.length === 0) {
+        if (resultsQ3.rows.length == 0) {
             await client.query('ROLLBACK');
             res.send("Book Doesn't Exist.");
             return;
         }
-        else if (resultsQ3.rows[0].numberofcopies === 0) {
+        else if (resultsQ3.rows[0].numberofcopies == 0) {
             await client.query('ROLLBACK');
             res.send("Not Enough Books Exist.");
             return;
@@ -254,7 +254,7 @@ const BorrowBook = async (req, res) => {
         const userBorrowCount = resultsQ4.rows[0].count;
         const userMembershipStatus = resultsQ5.rows[0].membershipstatus;
 
-        if ((userBorrowCount === 3 && userMembershipStatus === "normal") || (userBorrowCount === 5 && userMembershipStatus === "premium")) {
+        if ((userBorrowCount == 3 && userMembershipStatus == "normal") || (userBorrowCount == 5 && userMembershipStatus == "premium")) {
             await client.query('ROLLBACK');
             res.send("Membership limit Exceeded!!");
             return;
