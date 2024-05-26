@@ -134,6 +134,9 @@ BEGINNING OF ROUTER POST METHODS
 */
 const addUser = (req, res) => {
     const {name, password, membershipStatus, libraryID} = req.body;
+    if (membershipStatus != "normal" || membershipStatus != "premium"){
+        res.status(500).send("Wrong Membership!");
+    }
     pool.query(oqueries.getLibrariesById, [libraryID], (errorQ1, resultsQ1) => {
         if (errorQ1){ throw errorQ1; }
         else if (!(resultsQ1.rows.length)) {
