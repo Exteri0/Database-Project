@@ -42,7 +42,7 @@ export default function Login() {
             .then((res) => res.json())
             .then((data) => data)
 
-        if (res.response != 'Rejected') navigate(`/dashboard/${res.response}`)
+        if (res.response != 'Rejected') navigate(`/dashboard/${res.response}/1`)
         else setErr([1, 'WRONG CREDENTIALS'])
     }
 

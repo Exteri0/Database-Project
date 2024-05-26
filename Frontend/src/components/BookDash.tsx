@@ -74,7 +74,7 @@ export default function BookDash() {
             ISBN_Entry: parseInt(newBook.isbn),
             bookNameEntry: newBook.book_name,
             bookGenreEntry: newBook.book_genre,
-            libraryIDEntry: libId,
+            LibraryIDEntry: libId,
             numberOfCopiesEntry: parseInt(newBook.number_copies),
             authorSSNEntry: parseInt(newBook.authorSSN as unknown as string),
             authorNameEntry: newBook.author_name,
@@ -122,7 +122,11 @@ export default function BookDash() {
                 </div>
                 <main>
                     {booksData
-                        .filter((book) => book.book_name.includes(searchTarget))
+                        .filter((book) =>
+                            book.book_name
+                                .toLowerCase()
+                                .includes(searchTarget.toLowerCase())
+                        )
                         .map((book) => (
                             <div className="book-container" key={book.isbn}>
                                 <span>{book.isbn}</span>
