@@ -5,15 +5,17 @@ import userIconOff from '../assets/user-cirlce-add-off.png'
 import documentIconOn from '../assets/document-text-on.png'
 import documentIconOff from '../assets/document-text-off.png'
 import signOutIcon from '../assets/logout.png'
-import { Outlet, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
+import UsersDash from './UsersDash'
+import BookDash from './BookDash'
 
 export default function Layout() {
     const { libId, selected } = useParams()
 
     return (
-        <div className="layout-container">
+        <div className="out-container">
             {typeof selected != 'undefined' ? (
-                <>
+                <div className="layout-container">
                     <div className="side-nav">
                         <a className="logo-title">
                             <img src={logo} />
@@ -70,8 +72,8 @@ export default function Layout() {
                             <span>Sign Out</span>
                         </a>
                     </div>
-                    <Outlet />
-                </>
+                    {selected == '1' ? <UsersDash /> : <BookDash />}
+                </div>
             ) : (
                 <></>
             )}

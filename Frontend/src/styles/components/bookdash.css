@@ -1,0 +1,101 @@
+.book-dash {
+    background-color: #eeeeee;
+    min-height: 100vh;
+    width: 100%;
+    padding: 20px;
+    .search-container {
+        height: 85px;
+        border-bottom: 1px solid #b3b6b8;
+        display: flex;
+        align-items: center;
+        .search-box {
+            position: relative;
+            background-color: white;
+            border-radius: 15px;
+            height: 50px;
+            width: 350px;
+            input {
+                height: 100%;
+                border: none;
+                border-radius: 15px;
+                font-size: 16px;
+                width: 80%;
+                padding: 0px 10px;
+                &&::placeholder {
+                    color: #b2b1b1;
+                }
+            }
+            img {
+                position: absolute;
+                right: 20px;
+                top: 12px;
+            }
+        }
+    }
+    .books-table {
+        margin-top: 40px;
+        border-radius: 15px;
+        background-color: white;
+        padding: 5px 10px;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        .names {
+            color: #b2b1b1;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+            padding: 0px 0px 30px 0px;
+            border-bottom: 1px solid #b3b6b8;
+            align-items: center;
+        }
+        main {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+            .book-container {
+                display: grid;
+                grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+                .buttons {
+                    display: flex;
+                    flex-direction: row;
+                    gap: 30px;
+                    align-items: center;
+
+                    * {
+                        cursor: pointer;
+                    }
+                }
+            }
+        }
+        .new-names {
+            color: #b2b1b1;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+            align-items: center;
+            * {
+                border: none;
+                border-radius: 10px;
+                height: 25px;
+                width: 90%;
+                padding: 5px;
+            }
+            .submit-btn {
+                background-color: #28cb8b;
+                height: 30px;
+                width: 50%;
+                font-size: 16px;
+                color: white;
+                border: 1px solid #28cb8b;
+                cursor: pointer;
+                &:hover {
+                    background-color: white;
+                    color: #28cb8b;
+                }
+            }
+        }
+    }
+}
