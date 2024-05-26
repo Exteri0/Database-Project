@@ -173,8 +173,8 @@ ON UPDATE CASCADE;
 -- Seeding example data to work on
 
 -- Libraries
-INSERT INTO libraries VALUES (1, 'Alex Library', 20, 1);
-INSERT INTO libraries VALUES (2, 'Cairo Library', 18, 1);
+INSERT INTO libraries VALUES (1, 'Alex Library', 26, 1);
+INSERT INTO libraries VALUES (2, 'Cairo Library', 23, 1);
 
 -- Creating some librarians for them
 INSERT INTO librarians VALUES (1, 'Ahmad',1);
@@ -194,6 +194,8 @@ INSERT INTO Librarybooks VALUES ('4868637860', 'The Lord of the Rings', 'Fantasy
 INSERT INTO Librarybooks VALUES ('1914130405', 'The Hitchhiker''s Guide to the Galaxy', 'Science Fiction');
 INSERT INTO Librarybooks VALUES ('1915058414', 'The Adventures of Huckleberry Finn', 'Adventure');
 INSERT INTO Librarybooks VALUES ('6598700418', 'Gone with the Wind', 'Romance');
+INSERT INTO Librarybooks VALUES ('9638451223', 'What Am I', 'Self-help');
+INSERT INTO Librarybooks VALUES ('4538451245', 'Why', 'Horror');
 
 --Create some authors
 INSERT INTO authors VALUES (3,'James Clear');
@@ -201,6 +203,7 @@ INSERT INTO authors VALUES (2,'J.R.R. Tolkien');
 INSERT INTO authors VALUES (4,'Douglas Adams');
 INSERT INTO authors VALUES (1,'Margaret Mitchell');
 INSERT INTO authors VALUES (5,'Mark Twain');
+INSERT INTO authors VALUES (6,'Omar Ahmed');
 
 
 --Relate them together
@@ -209,6 +212,8 @@ INSERT INTO bookAuthorRelationship VALUES (2,'4868637860');
 INSERT INTO bookAuthorRelationship VALUES (4,'1914130405');
 INSERT INTO bookAuthorRelationship VALUES (1,'1915058414');
 INSERT INTO bookAuthorRelationship VALUES (5,'6598700418');
+INSERT INTO bookAuthorRelationship VALUES (6,'9638451223');
+INSERT INTO bookAuthorRelationship VALUES (6,'4538451245');
 
 --Put them in the libraries
 INSERT INTO bookLibraryRelationship VALUES ('7338203989',1,5);
@@ -218,13 +223,24 @@ INSERT INTO bookLibraryRelationship VALUES ('1914130405',1,8);
 INSERT INTO bookLibraryRelationship VALUES ('1915058414',2,3);
 INSERT INTO bookLibraryRelationship VALUES ('6598700418',2,1);
 INSERT INTO bookLibraryRelationship VALUES ('6598700418',1,7);
+INSERT INTO bookLibraryRelationship VALUES ('9638451223',1,4);
+INSERT INTO bookLibraryRelationship VALUES ('4538451245',1,2);
+INSERT INTO bookLibraryRelationship VALUES ('4538451245',2,5);
 
 
 -- Users
 INSERT INTO Users (name, password, membershipStatus, libraryID) VALUES ('John Doe', 'password123', 'normal', 1);
 INSERT INTO Users (name, password, membershipStatus, libraryID) VALUES ('Jane Smith', 'pass123', 'premium', 2);
+INSERT INTO Users (name, password, membershipStatus, libraryID) VALUES ('Lil Uzi', 'pass321', 'normal', 2);
+INSERT INTO Users (name, password, membershipStatus, libraryID) VALUES ('Kanye West', 'pass420', 'premium', 1);
+INSERT INTO Users (name, password, membershipStatus, libraryID) VALUES ('Sabrina Carpenter', 'songs123', 'premium', 2);
 
 -- transactions
 INSERT INTO transactions (userID, ISBNBook) VALUES (1, '7338203989');
 INSERT INTO transactions (userID, ISBNBook) VALUES (2, '4868637860');
+INSERT INTO transactions (userID, ISBNBook) VALUES (3, '6598700418');
+INSERT INTO transactions (userID, ISBNBook) VALUES (4, '9638451223');
+INSERT INTO transactions (userID, ISBNBook) VALUES (4, '1914130405');
+INSERT INTO transactions (userID, ISBNBook) VALUES (5, '4538451245');
+INSERT INTO transactions (userID, ISBNBook) VALUES (5, '4868637860');
 
