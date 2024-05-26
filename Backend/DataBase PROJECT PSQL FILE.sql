@@ -174,7 +174,7 @@ ON UPDATE CASCADE;
 
 -- Libraries
 INSERT INTO libraries VALUES (1, 'Alex Library', 26, 1);
-INSERT INTO libraries VALUES (2, 'Cairo Library', 23, 1);
+INSERT INTO libraries VALUES (2, 'Cairo Library', 27, 1);
 
 -- Creating some librarians for them
 INSERT INTO librarians VALUES (1, 'Ahmad',1);
@@ -224,6 +224,7 @@ INSERT INTO bookLibraryRelationship VALUES ('1915058414',2,3);
 INSERT INTO bookLibraryRelationship VALUES ('6598700418',2,1);
 INSERT INTO bookLibraryRelationship VALUES ('6598700418',1,7);
 INSERT INTO bookLibraryRelationship VALUES ('9638451223',1,4);
+INSERT INTO bookLibraryRelationship VALUES ('9638451223',2,4);
 INSERT INTO bookLibraryRelationship VALUES ('4538451245',1,2);
 INSERT INTO bookLibraryRelationship VALUES ('4538451245',2,5);
 
@@ -241,6 +242,6 @@ INSERT INTO transactions (userID, ISBNBook) VALUES (2, '4868637860');
 INSERT INTO transactions (userID, ISBNBook) VALUES (3, '6598700418');
 INSERT INTO transactions (userID, ISBNBook) VALUES (4, '9638451223');
 INSERT INTO transactions (userID, ISBNBook) VALUES (4, '1914130405');
-INSERT INTO transactions (userID, ISBNBook) VALUES (5, '4538451245');
+INSERT INTO transactions (userID, ISBNBook) VALUES (5, '7338203989');
 INSERT INTO transactions (userID, ISBNBook) VALUES (5, '4868637860');
 
