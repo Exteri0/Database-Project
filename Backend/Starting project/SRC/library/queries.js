@@ -29,9 +29,10 @@ const getNoBooksFromLibrary = `
     SELECT numberOfBooks FROM libraries WHERE libraryID = $1
 `;
 const showBooksInaLibrary = `
-    SELECT ISBN, bookName AS Book_Name, bookGenre AS Book_Genre, numberOfCopies AS Number_Copies
-    FROM bookLibraryRelationship AS BLR, libraryBooks AS B
-    WHERE libraryID = $1 AND BLR.ISBNBook = B.ISBN ORDER BY Book_Genre, Book_Name
+    SELECT ISBN, bookName AS Book_Name, bookGenre AS Book_Genre, numberOfCopies AS Number_Copies, authorName as Author_Name
+    FROM bookLibraryRelationship AS BLR, libraryBooks AS B, bookAuthorRelationship AS BAR, Authors AS A
+    WHERE libraryID = $1 AND BLR.ISBNBook = B.ISBN AND BAR.ISBNBook = B.ISBN AND BAR.ssnAuthor = A.SSN
+    ORDER BY Book_Genre, Book_Name
 `;
 const getBookAuthors = `
     SELECT authorName AS Author_Name
