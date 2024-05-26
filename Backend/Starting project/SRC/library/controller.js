@@ -194,61 +194,61 @@ const addBookToLibraryWithCopies = async (req, res) => {
     }
 };
 
-const addBookToLibraryWithoutCopies = (req, res) => {
+const addBookToLibraryWithoutCopies = async (req, res) => {
     const { ISBN_Entry, bookNameEntry, bookGenreEntry, LibraryIDEntry, authorSSNEntry, authorNameEntry } = req.body;
     console.log("ISBN ENTRY = ", ISBN_Entry)
     console.log("Library ID = ", LibraryIDEntry);
-    pool.query(queries.checkIfAuthorExistsInDB, [authorSSNEntry], (errorQ1, resultsQ1) => {
-        if (errorQ1) throw errorQ1;
-        else if (!(resultsQ1.rows.length)) {
-            console.log("Author doesn't exist")
-            pool.query(queries.addNewAuthorToDB, [authorSSNEntry, authorNameEntry], (errorQ2, resultsQ2) => {
-                if (errorQ2) throw errorQ2;
-                else console.log("New Author Added!");
-            })
+
+    const client = await pool.connect();
+
+    try {
+        // Check if author exists in DB
+        const authorResult = await client.query(queries.checkIfAuthorExistsInDB, [authorSSNEntry]);
+        if (!(authorResult.rows.length)) {
+            console.log("Author doesn't exist");
+            await client.query(queries.addNewAuthorToDB, [authorSSNEntry, authorNameEntry]);
+            console.log("New Author Added!");
         }
-    })
-    pool.query(queries.getLibrariesById, [LibraryIDEntry], (errorQ1, resultsQ1) => {
-        if (errorQ1) throw errorQ1;
-        else if (!(resultsQ1.rows.length)) {
-            res.send("Library Doesn\'t exist!!");
-            res.status(201).send("Library doesn't exist!!")
+
+        // Check if library exists
+        const libraryResult = await client.query(queries.getLibrariesById, [LibraryIDEntry]);
+        if (!(libraryResult.rows.length)) {
+            res.status(201).send("Library doesn't exist!!");
+            return;
         }
-        else {
-            pool.query(queries.checkBookExistsinLibrary, [ISBN_Entry, LibraryIDEntry], (errorQ2, resultsQ2) => {
-                if (errorQ2) throw errorQ2;
-                else if (!(resultsQ2.rows.length)) {
-                    pool.query('BEGIN');
-                    pool.query(queries.checkIfGenreExists, [bookGenreEntry], (errorQ3, resultsQ3) => {
-                        if (errorQ3) {pool.query('ROLLBACK'); throw errorQ3;}
-                        else if (!(resultsQ3.rows.length)) {
-                            pool.query(queries.addGenreToDB, [bookGenreEntry], (errorQ4, resultsQ4) => {
-                                if(errorQ4) {pool.query('ROLLBACK'); throw errorQ4;}
-                            })
-                            console.log("Book genre didn't exist, added it!");
-                        }
-                    })
-                    pool.query(queries.addBookToLibraryWithoutCopiesPart1, [ISBN_Entry, bookNameEntry, bookGenreEntry], (errorQ3, resultsQ3) => {
-                        if (errorQ3) { pool.query('ROLLBACK'); throw errorQ3; }
-                    })
-                    pool.query(queries.addBookToLibraryWithoutCopiesPart2, [ISBN_Entry, LibraryIDEntry], (errorQ3, resultsQ3) => {
-                        if (errorQ3) { pool.query('ROLLBACK'); throw errorQ3; }
-                    })
-                    pool.query(queries.addBookToLibraryWithoutCopiesPart3, [authorSSNEntry, ISBN_Entry], (errorQ3, resultsQ3) => {
-                        if (errorQ3) { pool.query('ROLLBACK'); throw errorQ3; }
-                    })
-                    pool.query('COMMIT');
-                    console.log("Book Didn't exist, Added without copies Successfully")
-                    res.status(201).send("Book Didn't exist, Added without copies Successfully");
-                }
-                else {
-                    console.log("Book already exists, no copies are added!");
-                    res.status(201).send("Book already exists, no copies are added!")
-                }
-            })
+
+        // Check if book exists in library
+        const bookResult = await client.query(queries.checkBookExistsinLibrary, [ISBN_Entry, LibraryIDEntry]);
+        if (!(bookResult.rows.length)) {
+            await client.query('BEGIN');
+
+            // Check if genre exists
+            const genreResult = await client.query(queries.checkIfGenreExists, [bookGenreEntry]);
+            if (!(genreResult.rows.length)) {
+                await client.query(queries.addGenreToDB, [bookGenreEntry]);
+                console.log("Book genre didn't exist, added it!");
+            }
+
+            // Add book to library without copies
+            await client.query(queries.addBookToLibraryWithoutCopiesPart1, [ISBN_Entry, bookNameEntry, bookGenreEntry]);
+            await client.query(queries.addBookToLibraryWithoutCopiesPart2, [ISBN_Entry, LibraryIDEntry]);
+            await client.query(queries.addBookToLibraryWithoutCopiesPart3, [authorSSNEntry, ISBN_Entry]);
+
+            await client.query('COMMIT');
+            console.log("Book Didn't exist, Added without copies Successfully");
+            res.status(201).send("Book Didn't exist, Added without copies Successfully");
+        } else {
+            console.log("Book already exists, no copies are added!");
+            res.status(201).send("Book already exists, no copies are added!");
         }
-    })
-}
+    } catch (error) {
+        await client.query('ROLLBACK');
+        console.error('Transaction failed: ', error);
+        res.status(500).send('Transaction failed');
+    } finally {
+        client.release();
+    }
+};
 
 /*
 ----------------------------------------------------------------------------
@@ -266,75 +266,91 @@ BEGINNING OF ROUTER PATCH METHODS
 ----------------------------------------------------------------------------
 */
 
-const increaseNumberOfBookCopies = (req, res) => {
+const increaseNumberOfBookCopies = async (req, res) => {
     const { ISBN_Entry, LibraryIDEntry, numberOfCopiesEntry } = req.body;
-    console.log("ISBN ENTRY = ", ISBN_Entry)
+    console.log("ISBN ENTRY = ", ISBN_Entry);
     console.log("Library ID = ", LibraryIDEntry);
-    pool.query(queries.getLibrariesById, [LibraryIDEntry], (errorQ1, resultsQ1) => {
-        if(errorQ1) throw errorQ1
-        else if (!(resultsQ1.rows.length)) {
-            res.status(201).send("Library Doesn't Exist!!");
-        }
-        else {
-            pool.query(queries.checkBookExistsinLibrary, [ISBN_Entry, LibraryIDEntry], (errorQ2, resultsQ2) => {
-                if (errorQ2) throw errorQ2;
-                else if (!(resultsQ2.rows.length)) {
-                    console.log("operation failed, book doesn't exist!!");
-                    res.status(201).send("Book Doesn't Exist!!");
-                }
-                else {
-                    pool.query('BEGIN');
-                    pool.query(queries.increaseNumberOfBookCopiesPart1, [ISBN_Entry, numberOfCopiesEntry], (errorQ3, resultsQ3) => {
-                        if (errorQ3) {pool.query('ROLLBACK'); throw errorQ3;}
-                    })
-                    pool.query(queries.increaseNumberOfBookCopiesPart2, [ISBN_Entry, LibraryIDEntry ,numberOfCopiesEntry], (errorQ3, resultsQ3) => {
-                        if (errorQ3) {pool.query('ROLLBACK'); throw errorQ3;}
-                    })
-                    pool.query('COMMIT');
-                    console.log("Book copies added!")
-                    res.status(201).send("Book Already exists, copies added successfully");
-                }
-            })
-        }
-    })   
-}
 
-const reduceNumberOfBookCopies = (req, res) => {
-    const { ISBN_Entry, LibraryIDEntry, numberOfCopiesEntry } = req.body;
-    console.log("ISBN ENTRY = ", ISBN_Entry)
-    console.log("Library ID = ", LibraryIDEntry);
-    pool.query(queries.getLibrariesById, [LibraryIDEntry], (errorQ1, resultsQ1) => {
-        if (errorQ1) throw errorQ1
-        else if (!(resultsQ1.rows.length)) {
+    const client = await pool.connect();
+
+    try {
+        // Check if library exists
+        const libraryResult = await client.query(queries.getLibrariesById, [LibraryIDEntry]);
+        if (!(libraryResult.rows.length)) {
             res.status(201).send("Library Doesn't Exist!!");
+            return;
         }
-        else {
-            pool.query(queries.checkBookExistsinLibrary, [ISBN_Entry, LibraryIDEntry], (errorQ2, resultsQ2) => {
-                if (errorQ2) throw errorQ2;
-                else if (!(resultsQ2.rows.length)) {
-                    console.log("operation failed, book doesn't exist!!");
-                    res.status(201).send("Book Doesn't Exist!!");
-                }
-                else if(resultsQ2.rows[0].numberofcopies < numberOfCopiesEntry){
-                    console.log("operation failed, no book copies to remove");
-                    res.status(201).send("not enough books!!");
-                }
-                else {
-                    pool.query('BEGIN');
-                    pool.query(queries.reduceNumberOfCopiesPart1, [ISBN_Entry, numberOfCopiesEntry], (errorQ3, resultsQ3) => {
-                        if (errorQ3) {pool.query('ROLLBACK'); throw errorQ3;}
-                    })
-                    pool.query(queries.reduceNumberOfCopiesPart2, [ISBN_Entry, LibraryIDEntry ,numberOfCopiesEntry], (errorQ3, resultsQ3) => {
-                        if (errorQ3) {pool.query('ROLLBACK'); throw errorQ3;}
-                    })
-                    pool.query('COMMIT');
-                    console.log("Book copies removed!")
-                    res.status(201).send("Book Already exists, copies removed successfully");
-                }
-            })
+
+        // Check if book exists in library
+        const bookResult = await client.query(queries.checkBookExistsinLibrary, [ISBN_Entry, LibraryIDEntry]);
+        if (!(bookResult.rows.length)) {
+            console.log("Operation failed, book doesn't exist!!");
+            res.status(201).send("Book Doesn't Exist!!");
+            return;
         }
-    })
-}
+
+        await client.query('BEGIN');
+
+        // Increase number of book copies
+        await client.query(queries.increaseNumberOfBookCopiesPart1, [ISBN_Entry, numberOfCopiesEntry]);
+        await client.query(queries.increaseNumberOfBookCopiesPart2, [ISBN_Entry, LibraryIDEntry, numberOfCopiesEntry]);
+
+        await client.query('COMMIT');
+        console.log("Book copies added!");
+        res.status(201).send("Book Already exists, copies added successfully");
+    } catch (error) {
+        await client.query('ROLLBACK');
+        console.error('Transaction failed: ', error);
+        res.status(500).send('Transaction failed');
+    } finally {
+        client.release();
+    }
+};
+
+const reduceNumberOfBookCopies = async (req, res) => {
+    const { ISBN_Entry, LibraryIDEntry, numberOfCopiesEntry } = req.body;
+    console.log("ISBN ENTRY = ", ISBN_Entry);
+    console.log("Library ID = ", LibraryIDEntry);
+
+    const client = await pool.connect();
+
+    try {
+        // Check if library exists
+        const libraryResult = await client.query(queries.getLibrariesById, [LibraryIDEntry]);
+        if (!(libraryResult.rows.length)) {
+            res.status(201).send("Library Doesn't Exist!!");
+            return;
+        }
+
+        // Check if book exists in library
+        const bookResult = await client.query(queries.checkBookExistsinLibrary, [ISBN_Entry, LibraryIDEntry]);
+        if (!(bookResult.rows.length)) {
+            console.log("Operation failed, book doesn't exist!!");
+            res.status(201).send("Book Doesn't Exist!!");
+            return;
+        } else if (bookResult.rows[0].numberofcopies < numberOfCopiesEntry) {
+            console.log("Operation failed, no book copies to remove");
+            res.status(201).send("Not enough books!!");
+            return;
+        }
+
+        await client.query('BEGIN');
+
+        // Reduce number of book copies
+        await client.query(queries.reduceNumberOfCopiesPart1, [ISBN_Entry, numberOfCopiesEntry]);
+        await client.query(queries.reduceNumberOfCopiesPart2, [ISBN_Entry, LibraryIDEntry, numberOfCopiesEntry]);
+
+        await client.query('COMMIT');
+        console.log("Book copies removed!");
+        res.status(201).send("Book exists, copies removed successfully");
+    } catch (error) {
+        await client.query('ROLLBACK');
+        console.error('Transaction failed: ', error);
+        res.status(500).send('Transaction failed');
+    } finally {
+        client.release();
+    }
+};
     
 
 
