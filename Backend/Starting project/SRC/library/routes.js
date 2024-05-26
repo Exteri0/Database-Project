@@ -3,7 +3,7 @@ const controller = require('./controller');
 const router = Router();
 
 router.get('/', controller.getLibraries);
-router.get('/login', controller.getLibrarianByNameSSnLibraryID);
+
 router.get('/Authors', controller.getAllAuthorsInDB);
 router.get('/:id', controller.getLibrariesById);
 router.get('/:id/Books', controller.showBooksInaLibrary);
@@ -15,6 +15,7 @@ router.get('/:ISBN/:id/number',controller.GetNumberOfBooksInLibrary);
 
 router.post('/bookAddCopies', controller.addBookToLibraryWithCopies);
 router.post('/bookAddNoCopies', controller.addBookToLibraryWithoutCopies);
+router.post('/login', controller.getLibrarianByNameSSnLibraryID);
 
 router.patch('/BookCopyUpdate', controller.increaseNumberOfBookCopies);
 
