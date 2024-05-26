@@ -7,7 +7,7 @@ USE SCHEMA my_schema
 CREATE DATABASE testdb2;
 ```
 
-Also make sure you have a user called testuser with all privelages.
+Also make sure you have a user called testuser with all privilege.
 
 ```
 CREATE ROLE testuser LOGIN PASSWORD '123'
