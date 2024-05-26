@@ -1,12 +1,27 @@
 # Database-Project
 
-To Run this project, you need to do run the following in order
+First, this project is running on a database hosted online. To run it locally, you need to make a database called testdb2 on your localhost.
+
+```
+USE SCHEMA my_schema
+CREATE DATABASE testdb2;
+```
+
+Also make sure you have a user called testuser with all privelages.
+
+```
+CREATE ROLE testuser LOGIN PASSWORD '123'
+GRANT ALL ON testdb2 TO testuser
+```
+
+Moreover, to Run this project, you need to do run the following in order
 
 ```bash
 cd Backend
 npm i
 cd Starting project
 npm i
+node ResetDB
 node server
 ```
 
