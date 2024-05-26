@@ -73,7 +73,7 @@ const GetNumberOfBooksInLibrary =`
 */
 
 const addNewAuthorToDB = `
-    INSERT INTO Authors (SSN, authorName) VALUES = ($1, $2)
+    INSERT INTO Authors (SSN, authorName) VALUES ($1, $2)
 `;
 
 //Queries to add a book, given its copies to a library
