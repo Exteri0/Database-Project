@@ -39,12 +39,14 @@ WHERE transactions.userID = $1 AND LibraryBooks.ISBN = transactions.ISBNBook`;
 
 const getRecommendedBooks = `
 SELECT LibraryBooks.ISBN, LibraryBooks.bookName
-FROM LibraryBooks
+FROM LibraryBooks, booklibraryrelationship
 WHERE LibraryBooks.bookGenre IN (
     SELECT DISTINCT L.bookGenre
     FROM transactions, LibraryBooks AS L
     WHERE transactions.userID = $1 AND L.ISBN = transactions.ISBNBook 
-)`;
+    ) AND
+    booklibraryrelationship.libraryID = $2
+`;
 
 const getUserbyIDandPassword = `
 SELECT *

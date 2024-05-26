@@ -15,7 +15,7 @@ router.get('/:id/current',controller.getUsersCurrentBorrowed)
 router.get('/:id/all/number',controller.getNumberUsersAllBorrowed)
 router.get('/:id/current/number',controller.getNumberUsersCurrentBorrowed)
 router.get('/:id/tags',controller.getUsersTags)
-router.get('/:id/recommended',controller.getRecommendedBooks)
+router.get('/:id/:libraryid/recommended',controller.getRecommendedBooks)
 
 /* POST */
 // Add new user

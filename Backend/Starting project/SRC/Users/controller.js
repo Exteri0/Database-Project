@@ -105,7 +105,8 @@ const getUsersTags = (req, res) => {
 
 const getRecommendedBooks = (req, res) => {
     const UserIDEntry = parseInt(req.params.id);
-    pool.query(queries.getRecommendedBooks, [UserIDEntry], (error, results) => {
+    const libraryIDEntry = parseInt(req.params.libraryid)
+    pool.query(queries.getRecommendedBooks, [UserIDEntry, libraryIDEntry], (error, results) => {
         if (error) throw error;
         res.status(200).json(results.rows);
     })
