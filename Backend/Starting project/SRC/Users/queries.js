@@ -1,8 +1,15 @@
 /* Get */
 const getUsers = `
-SELECT users.name,users.userID,users.membershipStatus,COUNT(transactions.transactionID)
+SELECT users.name,users.userID,users.membershipStatus,users.libraryID, COUNT(transactions.transactionID)
 FROM users,transactions
 WHERE users.userID = transactions.userID
+group by users.userID
+order by users.userID`;
+
+const getUsersInLibrary = `
+SELECT users.name,users.userID,users.membershipStatus,COUNT(transactions.transactionID)
+FROM users,transactions
+WHERE users.userID = transactions.userID AND users.libraryID = $1
 group by users.userID
 order by users.userID`;
 
@@ -70,6 +77,7 @@ INSERT INTO transactions (userID, ISBNBook) VALUES ($1, $2);
 module.exports = {
     //GET Methods
     getUsers,
+    getUsersInLibrary,
     getTransactions,
     getUsersById,
     getTransactionsById,

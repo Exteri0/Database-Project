@@ -5,6 +5,7 @@ const router = Router();
 /* GET */
 router.get('/login',controller.getUserbyIDandPassword)
 router.get('/', controller.getUsers);
+router.get('/:id/library',controller.getUsersInLibrary)
 router.get('/transactions',controller.getTransactions)
 router.get('/:id',controller.getUsersById)
 router.get('/:id/membership',controller.getUsersMembership)

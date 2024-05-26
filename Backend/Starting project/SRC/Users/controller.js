@@ -18,6 +18,14 @@ const getUsers = (req, res) => {
     })
 };
 
+const getUsersInLibrary = (req, res) => {
+    const LibraryIDEntry = parseInt(req.params.id);
+    pool.query(queries.getUsersInLibrary, [LibraryIDEntry] ,(error, results) => {
+        if (error) throw error;
+        res.status(200).json(results.rows);
+    })
+};
+
 const getTransactions = (req, res) => {
     pool.query(queries.getTransactions, (error, results) => {
         if (error) throw error;
@@ -240,6 +248,7 @@ const BorrowBook = (req,res) => {
 module.exports = {
     //GET Methods
     getUsers,
+    getUsersInLibrary,
     getTransactions,
     getUsersById,
     getUsersMembership,
