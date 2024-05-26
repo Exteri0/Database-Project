@@ -6,12 +6,13 @@
         height: 100%;
         width: 100%;
         z-index: 0;
+        border-radius: 8px;
+        box-shadow: 10px;
     }
-    span {
+    .card-info {
         z-index: 10;
         padding: 20px 50px;
         color: #717171;
-        font-size: 16px;
         position: absolute;
         bottom: -15px;
         text-align: center;
@@ -23,5 +24,12 @@
         border-radius: 10px;
         box-shadow: 10px;
         background-color: #eff5fa;
+        * {
+            font-size: 20px;
+        }
+        a {
+            color: #4caf4f;
+            text-decoration: none;
+        }
     }
 }

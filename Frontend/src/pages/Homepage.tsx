@@ -5,6 +5,11 @@ import bshelf from '../assets/Bookshelf Icon.png'
 import { Link } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import LibraryCard from '../components/LibraryCard'
+import Icon1 from '../assets/Icon.png'
+import Icon2 from '../assets/Icon2.png'
+import Icon3 from '../assets/Icon3.png'
+import Arrow from '../assets/Down.svg?react'
+import Footer from '../components/Footer'
 
 export default function HomePage() {
     interface ILibrary {
@@ -55,7 +60,7 @@ export default function HomePage() {
                 <img className="library-img" src={libraryImg} />
             </div>
             <div id="libraries-section">
-                <h3>Our Libraries</h3>
+                <h1>Our Libraries</h1>
                 <div className="library-cards">
                     {libraries.map((lib) => (
                         <LibraryCard
@@ -65,8 +70,49 @@ export default function HomePage() {
                     ))}
                 </div>
             </div>
-            <div id="whyus-section"></div>
-            <div className="cta"></div>
+            <div id="whyus-section">
+                <h1>Why Us?</h1>
+                <div className="cards">
+                    <section>
+                        <img src={Icon1} />
+                        <span className="title">
+                            Members <br />
+                            Management
+                        </span>
+                        <span className="details">
+                            Easily manage the users borrowings
+                        </span>
+                    </section>
+                    <section>
+                        <img src={Icon2} />
+                        <span className="title">
+                            Updatable <br />
+                            Books list
+                        </span>
+                        <span className="details">New books easily added</span>
+                    </section>
+                    <section>
+                        <img src={Icon3} />
+                        <span className="title">
+                            Collaborative <br />
+                            Environment
+                        </span>
+                        <span className="details">
+                            Get to work alongside professionals
+                        </span>
+                    </section>
+                </div>
+            </div>
+            <div className="cta">
+                <span className="big-title">
+                    What are you waiting for? <br />
+                    Join us now!
+                </span>
+                <Link to={'login'} className="cta-cta">
+                    Get Started <Arrow />
+                </Link>
+            </div>
+            <Footer />
         </div>
     )
 }
