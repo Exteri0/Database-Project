@@ -203,6 +203,9 @@ const returnBook = async (req, res) => {
 
 const updateMembership = (req, res) => {
     const { MembershipStatusEntry, UserIDEntry } = req.body;
+    if (MembershipStatusEntry != "normal" || MembershipStatusEntry != "premium"){
+        res.status(500).send("Wrong Membership!");
+    }
     pool.query(queries.updateMembership, [MembershipStatusEntry, UserIDEntry], (error, results) => {
         if (error) throw error;
         res.status(200).send("Membership Updated.");
