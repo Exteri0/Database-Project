@@ -89,12 +89,12 @@ export default function BookDash() {
         e.preventDefault()
         const dataToBeSent = {
             ISBN_Entry: String(newBook.isbn),
-            bookNameEntry: newBook.book_name,
-            bookGenreEntry: newBook.book_genre,
+            bookNameEntry: String(newBook.book_name),
+            bookGenreEntry: String(newBook.book_genre),
             LibraryIDEntry: libId,
             numberOfCopiesEntry: parseInt(newBook.number_copies),
             authorSSNEntry: String(newBook.authorSSN as unknown as string),
-            authorNameEntry: newBook.author_name,
+            authorNameEntry: String(newBook.author_name),
         }
         await fetch(
             'http://localhost:3000/testapi/v1/libraries/bookAddCopies',
@@ -153,7 +153,9 @@ export default function BookDash() {
                                 <div className="buttons">
                                     <img
                                         src={handIcon}
-                                        onClick={() => navigate('/borrow')}
+                                        onClick={() =>
+                                            navigate(`/borrow/${book.isbn}`)
+                                        }
                                     />
                                     <img
                                         src={minusIcon}

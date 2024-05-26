@@ -1,11 +1,10 @@
-import { Link } from 'react-router-dom'
 import logo from '../assets/logo.png'
 import Left from '../assets/Left.png'
 import '../styles/components/navbar2.css'
 
 export default function Navbar2() {
     return (
-        <nav className="nav-bar">
+        <nav className="nav-bar2">
             <a className="logo-and-title" href="#">
                 <span className="title">BookShelf</span>
                 <img className="logo12" src={logo} alt="Logo" />

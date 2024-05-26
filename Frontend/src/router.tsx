@@ -2,6 +2,7 @@ import { createBrowserRouter } from 'react-router-dom'
 import HomePage from './pages/Homepage'
 import Login from './pages/Login'
 import Layout from './components/Layout'
+import BorrowPage from './pages/BorrowPage'
 
 const router = createBrowserRouter([
     {
@@ -24,6 +25,10 @@ const router = createBrowserRouter([
     {
         path: '/dashboard/:libId/:selected',
         element: <Layout />,
+    },
+    {
+        path: '/borrow/:isbn',
+        element: <BorrowPage />,
     },
 ])
 
