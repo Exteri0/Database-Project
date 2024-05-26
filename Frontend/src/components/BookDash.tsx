@@ -88,12 +88,12 @@ export default function BookDash() {
     async function handleSubmit(e: React.FormEvent<HTMLButtonElement>) {
         e.preventDefault()
         const dataToBeSent = {
-            ISBN_Entry: parseInt(newBook.isbn),
+            ISBN_Entry: String(newBook.isbn),
             bookNameEntry: newBook.book_name,
             bookGenreEntry: newBook.book_genre,
             LibraryIDEntry: libId,
             numberOfCopiesEntry: parseInt(newBook.number_copies),
-            authorSSNEntry: parseInt(newBook.authorSSN as unknown as string),
+            authorSSNEntry: String(newBook.authorSSN as unknown as string),
             authorNameEntry: newBook.author_name,
         }
         await fetch(

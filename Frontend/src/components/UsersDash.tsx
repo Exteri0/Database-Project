@@ -68,11 +68,13 @@ export default function UsersDash() {
     async function handleSubmit(e: React.FormEvent<HTMLButtonElement>) {
         e.preventDefault()
         const dataToBeSent = {
-            name: newUser.name,
-            password: newUser.password,
-            membershipStatus: newUser.membershipstatus,
-            libraryID: libId,
+            name: String(newUser.name),
+            membershipStatus: String(newUser.membershipstatus),
+            libraryID: parseInt(libId as unknown as string),
+            password: String(newUser.password),
         }
+        console.log('this data is submitted')
+        console.log(dataToBeSent)
         await fetch('http://localhost:3000/testapi/v1/users/add', {
             method: 'POST',
             headers: {
@@ -89,10 +91,6 @@ export default function UsersDash() {
             ...newUser,
             [e.target.name]: [e.target.value],
         })
-    }
-
-    async function handleDelete(user: number) {
-        console.log('deleted')
     }
 
     return (
@@ -128,19 +126,6 @@ export default function UsersDash() {
                                 <span>{user.name}</span>
                                 <span>{user.membershipstatus}</span>
                                 <span>{user.count}</span>
-                                <div className="buttons">
-                                    <img src={editIcon} />
-                                    <img
-                                        src={trashIcon}
-                                        onClick={() =>
-                                            handleDelete(
-                                                parseInt(
-                                                    user.userid as unknown as string
-                                                )
-                                            )
-                                        }
-                                    />
-                                </div>
                             </div>
                         ))}
                 </main>
