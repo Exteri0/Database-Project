@@ -17,7 +17,7 @@ export default function Layout() {
             {typeof selected != 'undefined' ? (
                 <div className="layout-container">
                     <div className="side-nav">
-                        <a className="logo-title">
+                        <a className="logo-title" href="/">
                             <img src={logo} />
                             <span>BookShelf</span>
                         </a>

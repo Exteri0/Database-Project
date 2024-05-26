@@ -48,7 +48,6 @@ export default function BorrowPage() {
         },
     ])
 
-    const i = 5
     useEffect(() => {
         async function yes(isbn: string) {
             const response = await fetch(
@@ -59,7 +58,7 @@ export default function BorrowPage() {
             setMyBook(data[0])
         }
         yes(isbn as unknown as string)
-    }, [i])
+    }, [isbn])
 
     function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
         setMyUser({
@@ -70,48 +69,65 @@ export default function BorrowPage() {
 
     async function handleSubmit(e: React.FormEvent<HTMLButtonElement>) {
         e.preventDefault()
-        const dataToBeSent = {
-            UserIDEntry: String(myUser.id),
-            UserpasswordEntry: String(myUser.password),
-        }
-        const response = await fetch(
-            `http://localhost:3000/testapi/v1/users/login`,
-            {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(dataToBeSent),
+
+        try {
+            const dataToBeSent = {
+                UserIDEntry: String(myUser.id),
+                UserpasswordEntry: String(myUser.password),
             }
-        )
-        const res = await response.json()
-        if (res.response === 'Accepted') {
+
             const response1 = await fetch(
-                `http://localhost:3000/testapi/v1/users/${dataToBeSent.UserIDEntry}`
+                `http://localhost:3000/testapi/v1/users/login`,
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(dataToBeSent),
+                }
             )
-            const data = await response1.json()
-            console.log(data)
-            setMyUser({
-                ...myUser,
-                ...data[0],
-            })
-            const response2 = await fetch(
-                `http://localhost:3000/testapi/v1/users/${dataToBeSent.UserIDEntry}/all`
-            )
-            const borrowedss: ITransaction[] = await response2.json()
-            console.log(borrowedss)
-            setBorroweds(borrowedss)
-            const response3 = await fetch(
-                `http://localhost:3000/testapi/v1/users/${dataToBeSent.UserIDEntry}/recommended`
-            )
-            const recommendeds: IBook[] = await response3.json()
-            setRecommended(recommendeds)
-            setEnabled(1)
-        } else {
+
+            const result = await response1.json()
+            if (result.response === 'Accepted') {
+                const userResponse = await fetch(
+                    `http://localhost:3000/testapi/v1/users/${dataToBeSent.UserIDEntry}`
+                )
+                const userData = await userResponse.json()
+                const updatedUser = { ...myUser, ...userData[0] }
+                setMyUser(updatedUser)
+
+                const transactionsResponse = await fetch(
+                    `http://localhost:3000/testapi/v1/users/${dataToBeSent.UserIDEntry}/all`
+                )
+                if (!transactionsResponse.ok) {
+                    throw new Error('Transactions data request failed')
+                }
+                const borrowedTransactions: ITransaction[] =
+                    await transactionsResponse.json()
+                setBorroweds(borrowedTransactions)
+
+                if (updatedUser.libraryid) {
+                    const recommendationsResponse = await fetch(
+                        `http://localhost:3000/testapi/v1/users/${dataToBeSent.UserIDEntry}/${updatedUser.libraryid}/recommended`
+                    )
+                    if (!recommendationsResponse.ok) {
+                        throw new Error('Recommendations data request failed')
+                    }
+                    const recommendedBooks: IBook[] =
+                        await recommendationsResponse.json()
+                    setRecommended(recommendedBooks)
+                    setEnabled(1)
+                } else {
+                    setEnabled(0)
+                }
+            } else {
+                setEnabled(0)
+            }
+        } catch (error) {
+            console.error('An error occurred:', error)
             setEnabled(0)
         }
     }
-
     async function lendBook(isbn: string) {
         if (!enabled) return
         const dataToBeSent = {
