@@ -9,8 +9,8 @@ order by users.userID`;
 
 const getUsersInLibrary = `
 SELECT users.name,users.userID,users.membershipStatus,COUNT(transactions.transactionID)
-FROM users,transactions
-WHERE users.userID = transactions.userID AND users.libraryID = $1
+FROM users LEFT JOIN transactions ON users.userID = transactions.userID 
+Where users.libraryID = $1
 group by users.userID
 order by users.userID`;
 

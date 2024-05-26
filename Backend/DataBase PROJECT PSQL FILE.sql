@@ -174,7 +174,7 @@ ON UPDATE CASCADE;
 
 -- Libraries
 INSERT INTO libraries VALUES (1, 'Alex Library', 20, 1);
-INSERT INTO libraries VALUES (2, 'Cairo Library', 18, 6);
+INSERT INTO libraries VALUES (2, 'Cairo Library', 18, 1);
 
 -- Creating some librarians for them
 INSERT INTO librarians VALUES (1, 'Ahmad',1);
@@ -227,3 +227,4 @@ INSERT INTO Users (name, password, membershipStatus, libraryID) VALUES ('Jane Sm
 -- transactions
 INSERT INTO transactions (userID, ISBNBook) VALUES (1, '7338203989');
 INSERT INTO transactions (userID, ISBNBook) VALUES (2, '0486863786');
+
