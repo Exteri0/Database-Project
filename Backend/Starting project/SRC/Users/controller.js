@@ -134,21 +134,23 @@ BEGINNING OF ROUTER POST METHODS
 */
 const addUser = (req, res) => {
     const {name, password, membershipStatus, libraryID} = req.body;
-    if (membershipStatus != "normal" && membershipStatus != "premium"){
+    if (membershipStatus != "normal" && membershipStatus != "premium") {
         res.status(500).send("Wrong Membership!");
     }
-    pool.query(oqueries.getLibrariesById, [libraryID], (errorQ1, resultsQ1) => {
-        if (errorQ1){ throw errorQ1; }
-        else if (!(resultsQ1.rows.length)) {
-            res.send("Library Doesn\'t exist!!");
-        }
-        else {
-            pool.query(queries.addUser, [name, password, membershipStatus, libraryID], (errorQ2, resultsQ2) => {
-                if (errorQ2){throw errorQ2;}
-                res.status(201).send("User Added Successfully");
-            })
-        }
-    })
+    else {
+        pool.query(oqueries.getLibrariesById, [libraryID], (errorQ1, resultsQ1) => {
+            if (errorQ1) { throw errorQ1; }
+            else if (!(resultsQ1.rows.length)) {
+                res.send("Library Doesn\'t exist!!");
+            }
+            else {
+                pool.query(queries.addUser, [name, password, membershipStatus, libraryID], (errorQ2, resultsQ2) => {
+                    if (errorQ2) { throw errorQ2; }
+                    res.status(201).send("User Added Successfully");
+                })
+            }
+        })
+    }
 };
 
 const returnBook = async (req, res) => {
