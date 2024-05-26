@@ -3,7 +3,9 @@ const getUsers = `
 SELECT users.name,users.userID,users.membershipStatus,COUNT(transactions.transactionID)
 FROM users,transactions
 WHERE users.userID = transactions.userID
-group by users.userID`;
+group by users.userID
+order by users.userID`;
+
 const getTransactions = "SELECT * FROM transactions";
 const getUsersById = "SELECT * FROM users WHERE userID = $1";
 const getTransactionsById = "SELECT * FROM transactions WHERE transactionID = $1";
