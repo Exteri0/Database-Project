@@ -15,6 +15,7 @@ export default function BookDash() {
         book_genre: string
         number_copies: string
         author_name: string
+        authorSSN?:
     }
 
     const [targetISBN, setTargetISBN] = useState('')
@@ -27,6 +28,13 @@ export default function BookDash() {
             author_name: '',
         },
     ])
+    const[newBook,setNewBook] = useState<IBook>({
+            isbn: '',
+            book_name: '',
+            book_genre: '',
+            number_copies: '',
+            author_name: '',
+    })
 
     const navigate = useNavigate()
 
@@ -57,6 +65,16 @@ export default function BookDash() {
             .then((res) => res.json())
             .then((data) => console.log(data))
     }
+
+    async function handleSubmit(e:React.FormEvent<HTMLButtonElement>){
+        const dataToBeSent = {
+            ISBN_Entry:,
+            bookNameEntry:,
+            bookGenreEntry:,
+            libraryIDEntry:libId
+        }
+    }
+
 
     return (
         <div className="book-dash">
