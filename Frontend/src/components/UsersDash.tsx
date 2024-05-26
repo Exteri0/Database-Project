@@ -1,9 +1,7 @@
 import '../styles/components/usersdash.css'
 import searchIcon from '../assets/search-normal.png'
 import { useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
-import editIcon from '../assets/editIcon.png'
-import trashIcon from '../assets/Trash Can.png'
+import { useParams } from 'react-router-dom'
 
 export default function UsersDash() {
     const { libId } = useParams()
