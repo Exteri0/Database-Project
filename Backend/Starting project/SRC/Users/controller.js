@@ -112,8 +112,7 @@ const getRecommendedBooks = (req, res) => {
 };
 
 const getUserbyIDandPassword = (req, res) => {
-    const UserIDEntry = parseInt(req.body.UserIDEntry, 10);
-    const UserpasswordEntry = req.body.UserpasswordEntry;
+    const {UserIDEntry,UserpasswordEntry} = req.body;
     pool.query(queries.getUserbyIDandPassword, [UserIDEntry,UserpasswordEntry], (error, results) => {
         if (error) throw error;
         else if (!(results.rows.length)) {

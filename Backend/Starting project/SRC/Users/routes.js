@@ -3,7 +3,6 @@ const controller = require('./controller');
 const router = Router();
 
 /* GET */
-router.get('/login',controller.getUserbyIDandPassword)
 router.get('/', controller.getUsers1);
 router.get('/info', controller.getUsers2);
 router.get('/:id/library',controller.getUsersInLibrary)
@@ -20,6 +19,7 @@ router.get('/:id/recommended',controller.getRecommendedBooks)
 
 /* POST */
 // Add new user
+router.post('/login',controller.getUserbyIDandPassword)
 router.post('/add',controller.addUser);
 router.post('/Return',controller.returnBook);
 router.post('/Membership',controller.updateMembership);
