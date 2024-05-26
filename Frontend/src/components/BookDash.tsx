@@ -54,8 +54,25 @@ export default function BookDash() {
             LibraryIDEntry: libId,
             numberOfCopiesEntry: 1,
         }
+        await fetch('http://localhost:3000/testapi/v1/libraries/BookCopyAdd', {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        })
+            .then((res) => res.json())
+            .then((data) => console.log(data))
+    }
+
+    async function BookMinusMinus(isbn: string) {
+        const data = {
+            ISBN_Entry: parseInt(isbn),
+            LibraryIDEntry: libId,
+            numberOfCopiesEntry: 1,
+        }
         await fetch(
-            'http://localhost:3000/testapi/v1/libraries/BookCopyUpdate',
+            'http://localhost:3000/testapi/v1/libraries/BookCopyRemove',
             {
                 method: 'PATCH',
                 headers: {
@@ -140,7 +157,9 @@ export default function BookDash() {
                                     />
                                     <img
                                         src={minusIcon}
-                                        onClick={() => BookPlusPlus(book.isbn)}
+                                        onClick={() =>
+                                            BookMinusMinus(book.isbn)
+                                        }
                                     />
                                     <img
                                         src={plusIcon}
