@@ -51,6 +51,7 @@ FROM users
 WHERE userID = $1 AND password = $2;
 `;
 
+
 /* Post */
 const addUser = `INSERT INTO Users (name, password, membershipStatus, libraryID) VALUES ($1, $2, $3, $4)`;
 
@@ -60,6 +61,7 @@ UPDATE transactions
 SET returnedOn = CURRENT_TIMESTAMP
 WHERE transactionID = $1;
 `;
+
 
 // Update Membership
 const updateMembership = `

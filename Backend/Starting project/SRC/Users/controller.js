@@ -1,5 +1,4 @@
 const pool = require('../../database');
-const client = pool.connect()
 const queries = require('./queries');
 const oqueries = require('../library/queries');
 
@@ -142,37 +141,53 @@ const addUser = (req, res) => {
     })
 };
 
-const returnBook = (req, res) => {
-    const {transactionID, ISBN_Entry, LibraryIDEntry} = req.body;
-    pool.query(oqueries.getLibrariesById, [LibraryIDEntry], (errorQ1, resultsQ1) => {
-        if(errorQ1) throw errorQ1
-        else if (!(resultsQ1.rows.length)) {
+const returnBook = async (req, res) => {
+    const { transactionID, ISBN_Entry, LibraryIDEntry } = req.body;
+
+    const client = await pool.connect();
+
+    try {
+        await client.query('BEGIN');
+
+        const resultsQ1 = await client.query(oqueries.getLibrariesById, [LibraryIDEntry]);
+        if (resultsQ1.rows.length === 0) {
+            await client.query('ROLLBACK');
             res.send("Library Doesn't Exist!!");
+            return;
         }
-        else {
-            pool.query(oqueries.checkBookExistsinLibrary, [ISBN_Entry, LibraryIDEntry], (errorQ2, resultsQ2) => {
-                if (errorQ2) throw errorQ2;
-                else if (!(resultsQ2.rows.length)) {
-                    res.send("Book Doesn't Exist!!");
-                }
-                else {
-                    client.query('BEGIN');
-                    client.query(queries.returnBook, [transactionID], (errorQ3, resultsQ3) => {
-                        if (errorQ3) {pool.query('ROLLBACK'); throw errorQ3;}
-                    })
-                    client.query(oqueries.increaseNumberOfBookCopiesPart1, [ISBN_Entry, 1], (errorQ3, resultsQ3) => {
-                        if (errorQ3) {pool.query('ROLLBACK'); throw errorQ3;}
-                    })
-                    client.query(oqueries.increaseNumberOfBookCopiesPart2, [ISBN_Entry, LibraryIDEntry ,1], (errorQ3, resultsQ3) => {
-                        if (errorQ3) {pool.query('ROLLBACK'); throw errorQ3;}
-                    })
-                    client.query('COMMIT');
-                    client.release()
-                    res.status(201).send("Book has been returned.");
-                }
-            })
+
+        const resultsQ2 = await client.query(oqueries.checkBookExistsinLibrary, [ISBN_Entry, LibraryIDEntry]);
+        if (resultsQ2.rows.length === 0) {
+            await client.query('ROLLBACK');
+            res.send("Book Doesn't Exist!!");
+            return;
         }
-    })   
+
+        const resultsQ3 = await client.query(queries.getTransactionsById, [transactionID]);
+        if (resultsQ3.rows.length === 0) {
+            await client.query('ROLLBACK');
+            res.send("Book Doesn't Exist!!");
+            return;
+        }
+        else if (resultsQ3.rows[0].returnedon != null){
+            await client.query('ROLLBACK');
+            res.send("Book Returned!!");
+            return;
+        }
+
+        await client.query(queries.returnBook, [transactionID]);
+        await client.query(oqueries.increaseNumberOfBookCopiesPart1, [ISBN_Entry, 1]);
+        await client.query(oqueries.increaseNumberOfBookCopiesPart2, [ISBN_Entry, LibraryIDEntry, 1]);
+
+        await client.query('COMMIT');
+        res.status(201).send("Book has been returned.");
+    } catch (error) {
+        await client.query('ROLLBACK');
+        console.error('Error returning book', error);
+        res.status(500).send("An error occurred while returning the book.");
+    } finally {
+        client.release();
+    }
 };
 
 
