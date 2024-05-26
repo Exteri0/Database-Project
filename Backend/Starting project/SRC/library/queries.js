@@ -13,6 +13,11 @@ const getLibrarianByNameSSnLibraryID = `
     libraryID = $3
 `;
 
+const checkIfGenreExists = `
+    SELECT * FROM genre WHERE
+    genreName = $1
+`;
+
 const getAuthorsInDB = `
     SELECT * from Authors
 `;
@@ -87,6 +92,10 @@ const addBookToLibraryWithCopiesPart4 = `
     INSERT INTO bookAuthorRelationship (ssnAuthor, ISBNBook) VALUES ($1,$2)
 `;
 
+const addGenreToDB = `
+    INSERT INTO genre (genreName) VALUES ($1);
+`;
+
 //Queries to add copies of the book if it exists already in the library
 const increaseNumberOfBookCopiesPart1 = `
     UPDATE bookLibraryRelationship
@@ -152,6 +161,7 @@ module.exports = {
     getBookAuthors,
     getBookDataByISBN,
     checkBookExistsinLibrary,
+    checkIfGenreExists,
     checkIfAuthorOfBookExists,
     checkIfAuthorExistsInDB,
     GetNumberOfBooksInLibrary,
@@ -163,6 +173,8 @@ module.exports = {
     addBookToLibraryWithCopiesPart2,
     addBookToLibraryWithCopiesPart3,
     addBookToLibraryWithCopiesPart4,
+
+    addGenreToDB,
 
     addBookToLibraryWithoutCopiesPart1,
     addBookToLibraryWithoutCopiesPart2,

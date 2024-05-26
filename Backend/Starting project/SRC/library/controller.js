@@ -21,7 +21,7 @@ const getLibrarianByNameSSnLibraryID = (req, res) => {
     pool.query(queries.getLibrarianByNameSSnLibraryID, [librarianSSNEntry, librarianNameEntry, LibraryIDEntry], (error, results) => {
         if (error) throw error;
         else if (!(results.rows.length)) {
-            res.status(200).json({response : "Rejected"})
+            res.status(200).json({response: "Rejected"})
         }
         else {
             res.status(200).json({response: LibraryIDEntry})
@@ -154,6 +154,15 @@ const addBookToLibraryWithCopies = (req, res) => {
                 if (errorQ2) throw errorQ2;
                 else if (!(resultsQ2.rows.length)) {
                     pool.query('BEGIN');
+                    pool.query(queries.checkIfGenreExists, [bookGenreEntry], (errorQ3, resultsQ3) => {
+                        if (errorQ3) {pool.query('ROLLBACK'); throw errorQ3;}
+                        else if (!(resultsQ3.rows.length)) {
+                            pool.query(queries.addGenreToDB, [bookGenreEntry], (errorQ4, resultsQ4) => {
+                                if(errorQ4) {pool.query('ROLLBACK'); throw errorQ4;}
+                            })
+                            res.status(201).send("Book Genre didn't exist, added it");
+                        }
+                    })
                     pool.query(queries.addBookToLibraryWithCopiesPart1, [ISBN_Entry, bookNameEntry, bookGenreEntry], (errorQ3, resultsQ3) => {
                         if (errorQ3) {pool.query('ROLLBACK'); throw errorQ3;}
                     })
@@ -166,7 +175,9 @@ const addBookToLibraryWithCopies = (req, res) => {
                     pool.query(queries.addBookToLibraryWithCopiesPart4, [authorSSNEntry, ISBN_Entry], (errorQ3, resultsQ3) => {
                         if (errorQ3) {pool.query('ROLLBACK'); throw errorQ3;}
                     })
+                    
                     pool.query('COMMIT');
+                    console.log("Book added!")
                     res.status(201).send("Book Didn't exist, Added with copies Successfully");
                 }
                 else {
@@ -178,6 +189,7 @@ const addBookToLibraryWithCopies = (req, res) => {
                         if (errorQ3) {pool.query('ROLLBACK'); throw errorQ3;}
                     })
                     pool.query('COMMIT');
+                    console.log("Book copies added successfully");
                     res.status(201).send("Book Already exists, copies added successfully");
 
                 }
@@ -204,12 +216,22 @@ const addBookToLibraryWithoutCopies = (req, res) => {
         if (errorQ1) throw errorQ1;
         else if (!(resultsQ1.rows.length)) {
             res.send("Library Doesn\'t exist!!");
+            res.status(201).send("Library doesn't exist!!")
         }
         else {
             pool.query(queries.checkBookExistsinLibrary, [ISBN_Entry, LibraryIDEntry], (errorQ2, resultsQ2) => {
                 if (errorQ2) throw errorQ2;
                 else if (!(resultsQ2.rows.length)) {
                     pool.query('BEGIN');
+                    pool.query(queries.checkIfGenreExists, [bookGenreEntry], (errorQ3, resultsQ3) => {
+                        if (errorQ3) {pool.query('ROLLBACK'); throw errorQ3;}
+                        else if (!(resultsQ3.rows.length)) {
+                            pool.query(queries.addGenreToDB, [bookGenreEntry], (errorQ4, resultsQ4) => {
+                                if(errorQ4) {pool.query('ROLLBACK'); throw errorQ4;}
+                            })
+                            console.log("Book genre didn't exist, added it!");
+                        }
+                    })
                     pool.query(queries.addBookToLibraryWithoutCopiesPart1, [ISBN_Entry, bookNameEntry, bookGenreEntry], (errorQ3, resultsQ3) => {
                         if (errorQ3) { pool.query('ROLLBACK'); throw errorQ3; }
                     })
@@ -220,10 +242,12 @@ const addBookToLibraryWithoutCopies = (req, res) => {
                         if (errorQ3) { pool.query('ROLLBACK'); throw errorQ3; }
                     })
                     pool.query('COMMIT');
-                    res.status(201).send("Book Didn't exist, Added with copies Successfully");
+                    console.log("Book Didn't exist, Added without copies Successfully")
+                    res.status(201).send("Book Didn't exist, Added without copies Successfully");
                 }
                 else {
                     console.log("Book already exists, no copies are added!");
+                    res.status(201).send("Book already exists, no copies are added!")
                 }
             })
         }
@@ -259,7 +283,8 @@ const increaseNumberOfBookCopies = (req, res) => {
             pool.query(queries.checkBookExistsinLibrary, [ISBN_Entry, LibraryIDEntry], (errorQ2, resultsQ2) => {
                 if (errorQ2) throw errorQ2;
                 else if (!(resultsQ2.rows.length)) {
-                    res.send("Book Doesn't Exist!!");
+                    console.log("operation failed, book doesn't exist!!");
+                    res.status(201).send("Book Doesn't Exist!!");
                 }
                 else {
                     pool.query('BEGIN');
@@ -270,6 +295,7 @@ const increaseNumberOfBookCopies = (req, res) => {
                         if (errorQ3) {pool.query('ROLLBACK'); throw errorQ3;}
                     })
                     pool.query('COMMIT');
+                    console.log("Book copies added!")
                     res.status(201).send("Book Already exists, copies added successfully");
                 }
             })
@@ -308,12 +334,14 @@ const removeBookFromLibrary = (req, res) => {
             pool.query(queries.checkBookExistsinLibrary, [ISBN_Entry, LibraryIDEntry], (errorQ2, resultsQ2) => {
                 if (errorQ2) throw errorQ2;
                 else if (!(resultsQ2.rows.length)) {
-                    res.send("Book Doesn't Exist");
+                    console.log("Operation failed, no such book exists")
+                    res.status(201).send("Book Doesn't Exist");
                 }
                 else {
                     pool.query(queries.removeBookFromLibrary, [ISBN_Entry, LibraryIDEntry], (errorQ3, resultsQ3) => {
                         if (errorQ3) throw errorQ3;
-                        res.status(200).send("Book Deleted Successfully");
+                        console.log("operation successful!")
+                        res.status(201).send("Book Deleted Successfully");
                     } )
                 }
             })
