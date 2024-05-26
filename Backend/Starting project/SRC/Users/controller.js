@@ -243,7 +243,7 @@ const BorrowBook = async (req, res) => {
             res.send("Book Doesn't Exist.");
             return;
         }
-        else if (resultsQ3.rows[0].numberofcopies == 0) {
+        else if (resultsQ3.rows[0].numberofcopies <= 0) {
             await client.query('ROLLBACK');
             res.send("Not Enough Books Exist.");
             return;
