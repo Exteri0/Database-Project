@@ -1,0 +1,96 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    background-color: #eff5fa;
+    min-height: 100vh;
+    min-width: 100vh;
+    display: flex;
+    flex-direction: column;
+    .inner-container {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        padding: 0px 40px;
+        width: 95%;
+        height: 600px;
+        padding: 20px 40px;
+        border: 1px solid black;
+        .selected-book {
+            width: 500px;
+            height: 200px;
+            .white-container {
+                display: flex;
+                justify-content: space-around;
+                align-items: center;
+                height: 50%;
+                flex-direction: row;
+                background-color: white;
+                border-radius: 15px;
+                font-size: 16px;
+                width: 100%;
+            }
+        }
+        .form {
+            padding: 10px;
+            width: 500px;
+            background-color: white;
+            height: 450px;
+            border-radius: 15px;
+            padding: 0px 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: stretch;
+            input {
+                width: 500px;
+                height: 40px;
+                border-radius: 10px;
+                border: 1px solid;
+                margin-bottom: 20px;
+                font-size: large;
+                padding: 2px 7px;
+            }
+            label {
+                align-self: flex-start;
+            }
+            button {
+                height: 50px;
+                font-size: 28px;
+                color: white;
+                background-color: #2194f3;
+                border-radius: 25px;
+                border: none;
+                cursor: pointer;
+            }
+            h1 {
+                font-size: 36px;
+            }
+        }
+    }
+    .below-container {
+        padding: 0px 40px;
+        display: flex;
+        flex-direction: column;
+        section {
+            display: flex;
+            flex-direction: row;
+            gap: 30px;
+            .white-container {
+                width: 500px;
+                height: 100px;
+                display: flex;
+                justify-content: space-around;
+                align-items: center;
+                flex-direction: row;
+                background-color: white;
+                border-radius: 15px;
+                font-size: 16px;
+                span {
+                    color: #2194f3;
+                    cursor: pointer;
+                }
+            }
+        }
+    }
+}
