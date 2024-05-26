@@ -1,4 +1,5 @@
 const pool = require('../../database');
+const client = pool.connect()
 const queries = require('./queries');
 const oqueries = require('../library/queries');
 
@@ -147,17 +148,18 @@ const returnBook = (req, res) => {
                     res.send("Book Doesn't Exist!!");
                 }
                 else {
-                    pool.query('BEGIN');
-                    pool.query(queries.returnBook, [transactionID], (errorQ3, resultsQ3) => {
+                    client.query('BEGIN');
+                    client.query(queries.returnBook, [transactionID], (errorQ3, resultsQ3) => {
                         if (errorQ3) {pool.query('ROLLBACK'); throw errorQ3;}
                     })
-                    pool.query(oqueries.increaseNumberOfBookCopiesPart1, [ISBN_Entry, 1], (errorQ3, resultsQ3) => {
+                    client.query(oqueries.increaseNumberOfBookCopiesPart1, [ISBN_Entry, 1], (errorQ3, resultsQ3) => {
                         if (errorQ3) {pool.query('ROLLBACK'); throw errorQ3;}
                     })
-                    pool.query(oqueries.increaseNumberOfBookCopiesPart2, [ISBN_Entry, LibraryIDEntry ,1], (errorQ3, resultsQ3) => {
+                    client.query(oqueries.increaseNumberOfBookCopiesPart2, [ISBN_Entry, LibraryIDEntry ,1], (errorQ3, resultsQ3) => {
                         if (errorQ3) {pool.query('ROLLBACK'); throw errorQ3;}
                     })
-                    pool.query('COMMIT');
+                    client.query('COMMIT');
+                    client.release()
                     res.status(201).send("Book has been returned.");
                 }
             })
@@ -210,17 +212,17 @@ const BorrowBook = (req,res) => {
                                         res.send("Membership limit Exceeded!!");
                                     }
                                     else {
-                                        pool.query('BEGIN');
-                                        pool.query(oqueries.reduceNumberOfCopiesPart1, [ISBN_Entry, 1], (errorQ4, resultsQ4) => {
+                                        client.query('BEGIN');
+                                        client.query(oqueries.reduceNumberOfCopiesPart1, [ISBN_Entry, 1], (errorQ4, resultsQ4) => {
                                             if (errorQ4) {pool.query('ROLLBACK'); throw errorQ4;}
                                         } )
-                                        pool.query(oqueries.reduceNumberOfCopiesPart2, [ISBN_Entry, LibraryIDEntry,1], (errorQ4, resultsQ4) => {
+                                        client.query(oqueries.reduceNumberOfCopiesPart2, [ISBN_Entry, LibraryIDEntry,1], (errorQ4, resultsQ4) => {
                                             if (errorQ4) {pool.query('ROLLBACK'); throw errorQ4;}
                                         } )
-                                        pool.query(queries.BorrowBook, [userIDEntry, ISBN_Entry], (errorQ4, resultsQ4) => {
+                                        client.query(queries.BorrowBook, [userIDEntry, ISBN_Entry], (errorQ4, resultsQ4) => {
                                             if (errorQ4) {pool.query('ROLLBACK'); throw errorQ4;}
                                         } )
-                                        pool.query('COMMIT');
+                                        client.query('COMMIT');
                                         res.status(201).send("Book has been borrowed successfully.");
                                     }
                                 })
