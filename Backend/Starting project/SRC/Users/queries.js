@@ -45,7 +45,7 @@ WHERE LibraryBooks.bookGenre IN (
     FROM transactions, LibraryBooks AS L
     WHERE transactions.userID = $1 AND L.ISBN = transactions.ISBNBook 
     ) AND
-    booklibraryrelationship.libraryID = $2
+    booklibraryrelationship.libraryID = $2 AND booklibraryrelationship.ISBNBook = Librarybooks.ISBN
 `;
 
 const getUserbyIDandPassword = `
