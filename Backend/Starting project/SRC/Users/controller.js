@@ -10,8 +10,15 @@ BEGINNING OF ROUTER GET METHODS
 ----------------------------------------------------------------------------
 */
 
-const getUsers = (req, res) => {
-    pool.query(queries.getUsers, (error, results) => {
+const getUsers1 = (req, res) => {
+    pool.query(queries.getUsers1, (error, results) => {
+        if (error) throw error;
+        res.status(200).json(results.rows);
+    })
+};
+
+const getUsers2 = (req, res) => {
+    pool.query(queries.getUsers2, (error, results) => {
         if (error) throw error;
         res.status(200).json(results.rows);
     })
@@ -262,7 +269,8 @@ const BorrowBook = (req,res) => {
 
 module.exports = {
     //GET Methods
-    getUsers,
+    getUsers1,
+    getUsers2,
     getUsersInLibrary,
     getTransactions,
     getUsersById,

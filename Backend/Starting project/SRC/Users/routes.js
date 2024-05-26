@@ -4,7 +4,8 @@ const router = Router();
 
 /* GET */
 router.get('/login',controller.getUserbyIDandPassword)
-router.get('/', controller.getUsers);
+router.get('/', controller.getUsers1);
+router.get('/info', controller.getUsers2);
 router.get('/:id/library',controller.getUsersInLibrary)
 router.get('/transactions',controller.getTransactions)
 router.get('/:id',controller.getUsersById)
