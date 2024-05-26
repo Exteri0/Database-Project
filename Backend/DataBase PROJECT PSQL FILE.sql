@@ -195,7 +195,7 @@ INSERT INTO Librarybooks VALUES ('1914130405', 'The Hitchhiker''s Guide to the G
 INSERT INTO Librarybooks VALUES ('1915058414', 'The Adventures of Huckleberry Finn', 'Adventure');
 INSERT INTO Librarybooks VALUES ('6598700418', 'Gone with the Wind', 'Romance');
 INSERT INTO Librarybooks VALUES ('9638451223', 'What Am I', 'Self-help');
-INSERT INTO Librarybooks VALUES ('4538451245', 'Why', 'Horror');
+INSERT INTO Librarybooks VALUES ('4538451245', 'Why', 'Self-help');
 
 --Create some authors
 INSERT INTO authors VALUES (3,'James Clear');
