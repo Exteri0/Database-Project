@@ -207,63 +207,66 @@ const updateMembership = (req, res) => {
 };
 
 
-const BorrowBook = (req,res) => {
-    const {userIDEntry, ISBN_Entry, LibraryIDEntry} = req.body;
-    pool.query(oqueries.getLibrariesById, [LibraryIDEntry], (errorQ1, resultsQ1) => {
-        if (errorQ1) throw errorQ1;
-        else if (!(resultsQ1.rows.length)) {
+const BorrowBook = async (req, res) => {
+    const { userIDEntry, ISBN_Entry, LibraryIDEntry } = req.body;
+
+    const client = await pool.connect();
+
+    try {
+        await client.query('BEGIN');
+
+        const resultsQ1 = await client.query(oqueries.getLibrariesById, [LibraryIDEntry]);
+        if (resultsQ1.rows.length === 0) {
+            await client.query('ROLLBACK');
             res.send("Library Doesn't Exist");
-            throw errorQ1;
+            return;
         }
-        else {
-            pool.query(oqueries.checkBookExistsinLibrary, [ISBN_Entry, LibraryIDEntry], (errorQ2, resultsQ2) => {
-                if (errorQ2) throw errorQ2;
-                else if (!(resultsQ2.rows.length)) {
-                    res.send("Book Doesn't Exist");
-                    throw errorQ2;
-                }
-                else {
-                    pool.query(oqueries.GetNumberOfBooksInLibrary, [ISBN_Entry, LibraryIDEntry], (errorQ2, resultsQ2) => {
-                        if (errorQ2) throw errorQ2;
-                        else if (!(resultsQ2.rows.length)) {
-                            res.send("Book Doesn't Exist.");
-                            throw errorQ2;
-                        }
-                        else if (resultsQ2.rows[0].numberofcopies == 0){
-                            res.send("Not Enough Books Exist.");
-                            throw errorQ2;
-                        }
-                        else {
-                            pool.query(queries.getNumberUsersCurrentBorrowed, [userIDEntry], (errorQ2, resultsQ2) => {
-                                if (errorQ2) throw errorQ2;
-                                pool.query(queries.getUsersMembership, [userIDEntry], (errorQ3, resultsQ3) => {
-                                    if (errorQ3) throw errorQ3;
-                                    if ((resultsQ2.rows[0].count == 3 && resultsQ3.rows[0].membershipstatus == "normal") || (resultsQ2.rows[0].count == 5 && resultsQ3.rows[0].membershipstatus == "premium")){
-                                        res.send("Membership limit Exceeded!!");
-                                    }
-                                    else {
-                                        client.query('BEGIN');
-                                        client.query(oqueries.reduceNumberOfCopiesPart1, [ISBN_Entry, 1], (errorQ4, resultsQ4) => {
-                                            if (errorQ4) {pool.query('ROLLBACK'); throw errorQ4;}
-                                        } )
-                                        client.query(oqueries.reduceNumberOfCopiesPart2, [ISBN_Entry, LibraryIDEntry,1], (errorQ4, resultsQ4) => {
-                                            if (errorQ4) {pool.query('ROLLBACK'); throw errorQ4;}
-                                        } )
-                                        client.query(queries.BorrowBook, [userIDEntry, ISBN_Entry], (errorQ4, resultsQ4) => {
-                                            if (errorQ4) {pool.query('ROLLBACK'); throw errorQ4;}
-                                        } )
-                                        client.query('COMMIT');
-                                        res.status(201).send("Book has been borrowed successfully.");
-                                    }
-                                })
-                            })
-                        }
-                     })
-                }
-            })
+
+        const resultsQ2 = await client.query(oqueries.checkBookExistsinLibrary, [ISBN_Entry, LibraryIDEntry]);
+        if (resultsQ2.rows.length === 0) {
+            await client.query('ROLLBACK');
+            res.send("Book Doesn't Exist");
+            return;
         }
-    })
-}
+
+        const resultsQ3 = await client.query(oqueries.GetNumberOfBooksInLibrary, [ISBN_Entry, LibraryIDEntry]);
+        if (resultsQ3.rows.length === 0) {
+            await client.query('ROLLBACK');
+            res.send("Book Doesn't Exist.");
+            return;
+        }
+        else if (resultsQ3.rows[0].numberofcopies === 0) {
+            await client.query('ROLLBACK');
+            res.send("Not Enough Books Exist.");
+            return;
+        }
+
+        const resultsQ4 = await client.query(queries.getNumberUsersCurrentBorrowed, [userIDEntry]);
+        const resultsQ5 = await client.query(queries.getUsersMembership, [userIDEntry]);
+
+        const userBorrowCount = resultsQ4.rows[0].count;
+        const userMembershipStatus = resultsQ5.rows[0].membershipstatus;
+
+        if ((userBorrowCount === 3 && userMembershipStatus === "normal") || (userBorrowCount === 5 && userMembershipStatus === "premium")) {
+            await client.query('ROLLBACK');
+            res.send("Membership limit Exceeded!!");
+            return;
+        }
+
+        await client.query(oqueries.reduceNumberOfCopiesPart1, [ISBN_Entry, 1]);
+        await client.query(oqueries.reduceNumberOfCopiesPart2, [ISBN_Entry, LibraryIDEntry, 1]);
+        await client.query(queries.BorrowBook, [userIDEntry, ISBN_Entry]);
+
+        await client.query('COMMIT');
+        res.status(201).send("Book has been borrowed successfully.");
+    } catch (error) {
+        await client.query('ROLLBACK');
+        console.error('Error borrowing book', error);
+        res.status(500).send("An error occurred while borrowing the book.");
+    } finally {
+        client.release();
+    }
+};
 
 
 
