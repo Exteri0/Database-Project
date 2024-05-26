@@ -1,0 +1,47 @@
+/* navbar.css */
+
+.nav-bar {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 0px 30px;
+    height: 80px;
+    background-color: #EFF5FA;
+    align-items: center;
+}
+
+.logo-and-title {
+    display: flex;
+    gap: 10px;
+    flex-direction: row;
+    align-items: center;
+}
+
+.logo12 {
+    width: 45px; /* Adjust the width as needed */
+    height: auto; /* Keeps the aspect ratio */
+}
+
+.title {
+    font-size: 35px; /* Adjust the font size as needed */
+    color: #28CB8B; /* Set the desired color */
+}
+.back{
+font-size:20px ;
+color:#2194F3
+}
+.back-arrow{
+    width: 20px;
+    height: 20px;
+    margin-top: -3px;
+    margin-left: 8px;
+    transform: scaleX(-1);
+}
+a {
+    font-weight: 500;
+    color: inherit;
+    text-decoration: none;
+    font-size: 20px;
+}
+
+
