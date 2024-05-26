@@ -6,6 +6,13 @@ const getLibraries = `
     SELECT * FROM libraries
 `;
 
+const getLibrarianByNameSSnLibraryID = `
+    SELECT * FROM librarians WHERE
+    SSN = $1 AND
+    name = $2 AND
+    libraryID = $3
+`;
+
 const getAuthorsInDB = `
     SELECT * from Authors
 `;
@@ -137,6 +144,7 @@ const reduceNumberOfCopiesPart2 = `
 module.exports = {
     //Router GET Queries
     getLibraries,
+    getLibrarianByNameSSnLibraryID,
     getLibrariesById,
     getAuthorsInDB,
     getNoBooksFromLibrary,

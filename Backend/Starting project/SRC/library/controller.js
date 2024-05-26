@@ -1,3 +1,4 @@
+const { response } = require('express');
 const pool = require('../../database');
 const queries = require('./queries');
 
@@ -14,6 +15,19 @@ const getLibraries = (req, res) => {
         res.status(200).json(results.rows);
     })
 };
+
+const getLibrarianByNameSSnLibraryID = (req, res) => {
+    const { librarianSSNEntry, librarianNameEntry, LibraryIDEntry } = req.body;
+    pool.query(queries.getLibrarianByNameSSnLibraryID, [librarianSSNEntry, librarianNameEntry, LibraryIDEntry], (error, results) => {
+        if (error) throw error;
+        else if (!(results.rows.length)) {
+            res.status(200).json({response : "Rejected"})
+        }
+        else {
+            res.status(200).json({response: LibraryIDEntry})
+        }
+    })
+}
 
 const getLibrariesById = (req, res) => {
     const LibraryIDEntry = parseInt(req.params.id);
@@ -313,6 +327,7 @@ module.exports = {
     //GET Methods
     getLibraries,
     getLibrariesById,
+    getLibrarianByNameSSnLibraryID,
     getNoBooksFromLibrary,
     showBooksInaLibrary,
     getBookAuthors,
