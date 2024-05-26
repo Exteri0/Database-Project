@@ -158,7 +158,7 @@ const returnBook = (req, res) => {
                         if (errorQ3) {pool.query('ROLLBACK'); throw errorQ3;}
                     })
                     pool.query('COMMIT');
-                    res.status(201).send("Book Already exists, copies added successfully");
+                    res.status(201).send("Book has been returned.");
                 }
             })
         }
