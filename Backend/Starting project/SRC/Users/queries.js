@@ -1,8 +1,9 @@
 /* Get */
-const getUsers = `
+const getUsers1 = `SELECT * From Users`;
+
+const getUsers2 = `
 SELECT users.name,users.userID,users.membershipStatus,users.libraryID, COUNT(transactions.transactionID)
-FROM users,transactions
-WHERE users.userID = transactions.userID
+FROM users LEFT JOIN transactions ON users.userID = transactions.userID
 group by users.userID
 order by users.userID`;
 
@@ -78,7 +79,8 @@ INSERT INTO transactions (userID, ISBNBook) VALUES ($1, $2);
 
 module.exports = {
     //GET Methods
-    getUsers,
+    getUsers1,
+    getUsers2,
     getUsersInLibrary,
     getTransactions,
     getUsersById,
