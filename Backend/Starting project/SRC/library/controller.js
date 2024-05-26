@@ -277,7 +277,7 @@ const increaseNumberOfBookCopies = (req, res) => {
     pool.query(queries.getLibrariesById, [LibraryIDEntry], (errorQ1, resultsQ1) => {
         if(errorQ1) throw errorQ1
         else if (!(resultsQ1.rows.length)) {
-            res.send("Library Doesn't Exist!!");
+            res.status(201).send("Library Doesn't Exist!!");
         }
         else {
             pool.query(queries.checkBookExistsinLibrary, [ISBN_Entry, LibraryIDEntry], (errorQ2, resultsQ2) => {
@@ -301,6 +301,43 @@ const increaseNumberOfBookCopies = (req, res) => {
             })
         }
     })   
+}
+
+const reduceNumberOfBookCopies = (req, res) => {
+    const { ISBN_Entry, LibraryIDEntry, numberOfCopiesEntry } = req.body;
+    console.log("ISBN ENTRY = ", ISBN_Entry)
+    console.log("Library ID = ", LibraryIDEntry);
+    pool.query(queries.getLibrariesById, [LibraryIDEntry], (errorQ1, resultsQ1) => {
+        if (errorQ1) throw errorQ1
+        else if (!(resultsQ1.rows.length)) {
+            res.status(201).send("Library Doesn't Exist!!");
+        }
+        else {
+            pool.query(queries.checkBookExistsinLibrary, [ISBN_Entry, LibraryIDEntry], (errorQ2, resultsQ2) => {
+                if (errorQ2) throw errorQ2;
+                else if (!(resultsQ2.rows.length)) {
+                    console.log("operation failed, book doesn't exist!!");
+                    res.status(201).send("Book Doesn't Exist!!");
+                }
+                else if(resultsQ2.rows[0].numberofcopies < numberOfCopiesEntry){
+                    console.log("operation failed, no book copies to remove");
+                    res.status(201).send("not enough books!!");
+                }
+                else {
+                    pool.query('BEGIN');
+                    pool.query(queries.reduceNumberOfCopiesPart1, [ISBN_Entry, numberOfCopiesEntry], (errorQ3, resultsQ3) => {
+                        if (errorQ3) {pool.query('ROLLBACK'); throw errorQ3;}
+                    })
+                    pool.query(queries.reduceNumberOfCopiesPart2, [ISBN_Entry, LibraryIDEntry ,numberOfCopiesEntry], (errorQ3, resultsQ3) => {
+                        if (errorQ3) {pool.query('ROLLBACK'); throw errorQ3;}
+                    })
+                    pool.query('COMMIT');
+                    console.log("Book copies removed!")
+                    res.status(201).send("Book Already exists, copies removed successfully");
+                }
+            })
+        }
+    })
 }
     
 
@@ -370,6 +407,7 @@ module.exports = {
 
     //PATCH Requests
     increaseNumberOfBookCopies,
+    reduceNumberOfBookCopies,
 
     //DELETE Requests,
     removeBookFromLibrary,

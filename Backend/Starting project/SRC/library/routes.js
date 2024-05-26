@@ -17,7 +17,8 @@ router.post('/bookAddCopies', controller.addBookToLibraryWithCopies);
 router.post('/bookAddNoCopies', controller.addBookToLibraryWithoutCopies);
 router.post('/login', controller.getLibrarianByNameSSnLibraryID);
 
-router.patch('/BookCopyUpdate', controller.increaseNumberOfBookCopies);
+router.patch('/BookCopyAdd', controller.increaseNumberOfBookCopies);
+router.patch('/BookCopyRemove', controller.reduceNumberOfBookCopies);
 
 router.delete('/RemoveBook', controller.removeBookFromLibrary);
 
