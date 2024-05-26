@@ -95,7 +95,22 @@ const getRecommendedBooks = (req, res) => {
         res.status(200).json(results.rows);
     })
 };
+
+const getUserbyIDandPassword = (req, res) => {
+    const UserIDEntry = parseInt(req.body.UserIDEntry, 10);
+    const UserpasswordEntry = req.body.UserpasswordEntry;
+    pool.query(queries.getUserbyIDandPassword, [UserIDEntry,UserpasswordEntry], (error, results) => {
+        if (error) throw error;
+        else if (!(results.rows.length)) {
+            res.status(200).json({response : "Rejected"})
+        }
+        else {
+            res.status(200).json({response : "Accepted"})
+        }
+    })
+};
 /*
+
 ----------------------------------------------------------------------------
 
 BEGINNING OF ROUTER POST METHODS
@@ -239,6 +254,8 @@ module.exports = {
     getNumberUsersCurrentBorrowed,
     getUsersTags,
     getRecommendedBooks,
+    getUserbyIDandPassword,
+    //POST Methods
     addUser,
     returnBook,
     updateMembership,

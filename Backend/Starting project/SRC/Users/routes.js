@@ -3,6 +3,7 @@ const controller = require('./controller');
 const router = Router();
 
 /* GET */
+router.get('/login',controller.getUserbyIDandPassword)
 router.get('/', controller.getUsers);
 router.get('/transactions',controller.getTransactions)
 router.get('/:id',controller.getUsersById)

@@ -32,6 +32,12 @@ WHERE LibraryBooks.bookGenre IN (
     WHERE transactions.userID = $1 AND L.ISBN = transactions.ISBNBook 
 )`;
 
+const getUserbyIDandPassword = `
+SELECT *
+FROM users
+WHERE userID = $1 AND password = $2;
+`;
+
 /* Post */
 const addUser = `INSERT INTO Users (name, password, membershipStatus, libraryID) VALUES ($1, $2, $3, $4)`;
 
@@ -68,6 +74,8 @@ module.exports = {
     getNumberUsersCurrentBorrowed,
     getUsersTags,
     getRecommendedBooks,
+    getUserbyIDandPassword,
+    //POST Methods
     addUser,
     returnBook,
     updateMembership,
